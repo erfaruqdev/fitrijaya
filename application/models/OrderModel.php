@@ -508,8 +508,10 @@ class OrderModel extends CI_Model
 		$this->db->select('a.*, b.name AS product, b.color, b.size')->from('order_detail AS a');
 		$this->db->join('products AS b', 'a.product_id = b.id');
 		$this->db->where('a.order_id', $id);
-		$result = $this->db->order_by('a.id', 'ASC')->get()->result_object();
-		if (!$result) {
+		$result = $this->db->order_by('a.id', 'ASC')->get();
+		$datas = $result->result_object();
+		$count = $result->num_rows();
+		if (!$datas) {
 			return [
 				'status' => 400,
 				'message' => 'Data barang tidak valid'
@@ -517,7 +519,8 @@ class OrderModel extends CI_Model
 		}
 
 		$total = 0;
-		foreach ($result as $d) {
+		$item = 0;
+		foreach ($datas as $d) {
 			$data[] = [
 				'product' => $d->product.' '.strtoupper($d->color).'  NO. '.convertSize($d->size),
 				'qty' => $d->qty,
@@ -525,6 +528,7 @@ class OrderModel extends CI_Model
 				'amount' => $d->amount
 			];
 			$total += $d->amount;
+			$item += $d->qty;
 		}
 
 		return [
@@ -537,6 +541,8 @@ class OrderModel extends CI_Model
 			'amount' => $total,
 			'discount' => $getOrder->discount,
 			'nominal' => $getOrder->nominal,
+			'count' => $count,
+			'item' => $item,
 			'data' => $data
 		];
 	}

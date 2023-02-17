@@ -203,12 +203,12 @@
                     <table class="table mb-0">
 						<?php if ($data['customer'] !== 'UMUM') { ?>
                         <tr>
-                            <td>Customer</td>
+                            <td>Pelanggan</td>
                             <td><b><?= $data['customer'] ?></b</td>
                         </tr>
 						<?php } ?>
                         <tr>
-                            <td>No.</td>
+                            <td>No. Faktur</td>
                             <td><?= $data['id'] ?></td>
                         </tr>
                         <tr>
@@ -245,6 +245,12 @@
                 </div>
             </div>
             <hr>
+				<div class="row">
+					<div class="col-12 text-center">
+						Total <b><?= $data['item'] ?></b> item dari <b><?= $data['count'] ?></b> macam barang
+					</div>
+				</div>
+			<hr>
             <div class="row">
                 <div class="col-12">
                     <table class="table mb-0">
@@ -290,7 +296,7 @@
         <?php } ?>
     </div>
     <script>
-        window.print()
+        //window.print()
         // setTimeout(() => {
         //     window.close()
         // }, 2000);

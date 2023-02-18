@@ -183,9 +183,9 @@ class ProductModel extends CI_Model
         $this->db->join('units AS d', 'a.unit_id = d.id');
 
 		if ($name != '') {
-			$this->db->like('a.name', $name);
-			$this->db->or_like('a.color', $name);
-			$this->db->or_like('a.size', $name);
+			$this->db->like('a.name', $name, 'after');
+			$this->db->like('a.color', $name, 'after');
+			$this->db->like('a.size', $name, 'after');
 		}
 
         if ($category != '') {

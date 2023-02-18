@@ -119,7 +119,7 @@ class PurchaseModel extends CI_Model
         $this->db->select('*')->like('name', $keyword);
 		$this->db->or_like('color', $keyword);
 		$this->db->or_like('size', $keyword);
-        $data = $this->db->limit(10)->get('products')->result_object();
+        $data = $this->db->order_by('name ASC, color ASC, size ASC')->limit(10)->get('products')->result_object();
 
         
         if ($data) {

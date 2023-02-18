@@ -202,11 +202,15 @@
                     $('#color').val('')
                     $('#size').val('')
                     $('#price').val('')
+                    $('#price-two').val('')
+                    $('#price-three').val('')
                 }else{
                     $('#id').val(id)
                     $('#color').val(res.data.color)
                     $('#size').val(res.data.size)
                     $('#price').val(res.data.price)
+                    $('#price-two').val(res.data.price_two)
+                    $('#price-three').val(res.data.price_three)
                 }
                 $('#name').val(res.data.name)
                 $('#category').val(res.data.category)

@@ -224,7 +224,9 @@ class ProductModel extends CI_Model
                 'amount' => $check->amount,
                 'color' => $check->color,
                 'size' => $check->size,
-                'price' => $check->price
+                'price' => $check->price,
+                'price_two' => $check->price_two,
+                'price_three' => $check->price_three,
             ]
         ];
     }

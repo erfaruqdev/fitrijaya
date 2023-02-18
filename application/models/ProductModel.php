@@ -192,7 +192,7 @@ class ProductModel extends CI_Model
             $this->db->where('a.category_id', $category);
         }
 
-        $result = $this->db->order_by('a.name ASC, a.color ASC, a.size ASC, a.created_at DESC')->get();
+        $result = $this->db->order_by('a.name ASC, a.color ASC, a.size ASC')->get();
 
         return [
             $result->result_object(),

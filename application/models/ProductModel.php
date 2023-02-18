@@ -48,6 +48,7 @@ class ProductModel extends CI_Model
         $price = (int)$price;
 		$priceTwo = (int)$priceTwo;
 		$priceThree = (int)$priceThree;
+		$keyword = $name.' '.$color.''.convertSize($size, $category);
 
         if ($name == '' || $brand == '' || $category == '' || $package == '' || $unit == '' || $amount == '') {
             return [
@@ -73,7 +74,8 @@ class ProductModel extends CI_Model
                 'price_two' => $priceTwo,
                 'price_three' => $priceThree,
                 'stock' => 0,
-                'created_at' => date("Y-m-d H:i:s")
+                'created_at' => date("Y-m-d H:i:s"),
+				'keyword' => strtoupper($keyword)
             ];
             $this->db->insert('products', $data);
             if ($this->db->affected_rows() > 0) {
@@ -132,7 +134,8 @@ class ProductModel extends CI_Model
 				'price_three' => $priceThree,
                 'color' => $color,
                 'size' => $size,
-                'updated_at' => date('Y-m-d H:i:s')
+                'updated_at' => date('Y-m-d H:i:s'),
+				'keyword' => strtoupper($keyword)
             ];
             $this->db->where('id', $id)->update('products', $data);
             if ($this->db->affected_rows() > 0) {

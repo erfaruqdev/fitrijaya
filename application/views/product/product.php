@@ -206,7 +206,7 @@
                                         <?php
                                         for ($i=0; $i <= 35; $i++) {
                                             ?>
-                                            <option value="<?= $i ?>"><?= convertSize($i) ?></option>
+                                            <option value="<?= $i ?>"><?= convertSizeShort($i) ?></option>
                                             <?php
                                         }
                                         ?>

@@ -229,3 +229,23 @@ function convertSize($size, $categoryId)
 
     return $size;
 }
+
+function convertSizeShort($size) {
+	if ($size == 9) {
+		$size = '9/S';
+	}elseif ($size == 10) {
+		$size = '10/M';
+	}elseif ($size == 11) {
+		$size = '11/L';
+	}elseif ($size == 12) {
+		$size = '12/XL';
+	}elseif ($size == 13) {
+		$size = '13/XXL';
+	}elseif ($size == 14) {
+		$size = '14/XXXL';
+	}else {
+		$size;
+	}
+
+	return $size;
+}

@@ -22,7 +22,7 @@ if ($product) {
                                 <div class="col-9 col-md-10 col-lg-10 col-xl-10">
                                     <div class="row align-middle">
                                         <div class="col-12">
-                                            <b><?= $data->name .' '.strtoupper($data->color).' NO '.convertSize($data->size) ?></b>
+                                            <b><?= $data->name .' '.strtoupper($data->color).' '.convertSize($data->size, $data->category_id) ?></b>
                                         </div>
                                         <div class="col-12 text-xs text-black-50">
                                             <?= $data->package ?> ( <?= $data->amount . ' ' . $data->unit ?> )

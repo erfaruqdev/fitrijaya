@@ -117,17 +117,17 @@ class OrderModel extends CI_Model
     public function getProduct()
     {
         $keyword = $this->input->post('keyword', true);
-		$this->db->select('*');
+		$this->db->select('*')->from('products');
 		$this->db->like('name', $keyword, 'after');
 		$this->db->or_like('color', $keyword, 'after');
 		$this->db->or_like('size', $keyword, 'after');
-		$data = $this->db->order_by('name ASC, color ASC, size ASC')->limit(10)->get('products')->result_object();
+		$data = $this->db->order_by('name ASC, color ASC, size ASC')->limit(10)->get()->result_object();
 
         if ($data) {
             foreach ($data as $d) {
                 $response[] = [
-					'label' => $d->name.' '.strtoupper($d->color).' - '.convertSize($d->size),
-					'value' => $d->name.' '.strtoupper($d->color).' - '.convertSize($d->size),
+					'label' => $d->name.' '.strtoupper($d->color).' '.convertSize($d->size, $d->category_id),
+					'value' => $d->name.' '.strtoupper($d->color).' '.convertSize($d->size, $d->category_id),
                     'id' => $d->id
                 ];
             }
@@ -233,7 +233,7 @@ class OrderModel extends CI_Model
     {
         $invoice = $this->input->post('invoice', true);
 
-        $this->db->select('a.*, b.name, b.color, b.size')->from('order_detail AS a');
+        $this->db->select('a.*, b.name, b.color, b.size, b.category_id')->from('order_detail AS a');
         $this->db->join('products AS b', 'a.product_id = b.id');
         $this->db->where('a.order_id', $invoice);
         $result = $this->db->order_by('a.id', 'DESC')->get();
@@ -245,7 +245,7 @@ class OrderModel extends CI_Model
             foreach ($data as $d) {
                 $rows[] = [
                     'id' => $d->id,
-                    'product' => $d->name.' '.strtoupper($d->color).' - '.convertSize($d->size),
+                    'product' => $d->name.' '.strtoupper($d->color).' '.convertSize($d->size, $d->category_id),
                     'qty' => $d->qty,
                     'price' => number_format($d->price, 0, ',', '.'),
                     'amount' => number_format($d->amount, 0, ',', '.')
@@ -272,7 +272,7 @@ class OrderModel extends CI_Model
     public function loadDetail()
     {
         $invoice = $this->input->post('invoice', true);
-        $this->db->select('a.*, b.name, b.color, b.size')->from('order_detail AS a');
+        $this->db->select('a.*, b.name, b.color, b.size, b.category_id')->from('order_detail AS a');
         $this->db->join('products AS b', 'a.product_id = b.id');
         $this->db->where('a.order_id', $invoice);
         $result = $this->db->order_by('a.id', 'DESC')->get();
@@ -284,7 +284,7 @@ class OrderModel extends CI_Model
             foreach ($data as $d) {
                 $rows[] = [
                     'id' => $d->id,
-                    'product' => $d->name.' '.strtoupper($d->color).' - '.convertSize($d->size),
+                    'product' => $d->name.' '.strtoupper($d->color).' '.convertSize($d->size, $d->category_id),
                     'qty' => $d->qty,
                     'price' => number_format($d->price, 0, ',', '.'),
                     'amount' => number_format($d->amount, 0, ',', '.')
@@ -507,7 +507,7 @@ class OrderModel extends CI_Model
 			];
 		}
 
-		$this->db->select('a.*, b.name AS product, b.color, b.size')->from('order_detail AS a');
+		$this->db->select('a.*, b.name AS product, b.color, b.size, b.category_id')->from('order_detail AS a');
 		$this->db->join('products AS b', 'a.product_id = b.id');
 		$this->db->where('a.order_id', $id);
 		$result = $this->db->order_by('a.id', 'ASC')->get();
@@ -524,7 +524,7 @@ class OrderModel extends CI_Model
 		$item = 0;
 		foreach ($datas as $d) {
 			$data[] = [
-				'product' => $d->product.' '.strtoupper($d->color).'  NO. '.convertSize($d->size),
+				'product' => $d->product.' '.strtoupper($d->color).' '.convertSize($d->size, $d->category_id),
 				'qty' => $d->qty,
 				'price' => $d->price,
 				'amount' => $d->amount

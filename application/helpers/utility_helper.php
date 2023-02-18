@@ -203,23 +203,29 @@ function terbilang($nilai)
     return $hasil;
 }
 
-function convertSize($size)
+function convertSize($size, $categoryId)
 {
-    if ($size == 9) {
-        $size = '9/S';
-    }elseif ($size == 10) {
-        $size = 'M';
-    }elseif ($size == 11) {
-        $size = 'L';
-    }elseif ($size == 12) {
-        $size = 'XL';
-    }elseif ($size == 13) {
-        $size = 'XXL';
-    }elseif ($size == 14) {
-        $size = 'XXXL';
-    }else {
-        $size;
-    }
+	if ($categoryId === 2) {
+		if ($size == 9) {
+			$size = 'NO. 9/S';
+		}elseif ($size == 10) {
+			$size = 'NO. M';
+		}elseif ($size == 11) {
+			$size = 'NO. L';
+		}elseif ($size == 12) {
+			$size = 'NO. XL';
+		}elseif ($size == 13) {
+			$size = 'NO. XXL';
+		}elseif ($size == 14) {
+			$size = 'NO. XXXL';
+		}else {
+			$size = 'NO. '.$size;
+		}
+	} elseif ($categoryId === 3) {
+		$size = 'NO. '.$size;
+	} else {
+		$size = '';
+	}
 
     return $size;
 }

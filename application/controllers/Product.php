@@ -89,7 +89,7 @@ class Product extends CI_Controller
 		$data = $this->db->get('products')->result_object();
 		foreach ($data as $d) {
 			$this->db->where('id', $d->id)->update('products', [
-				'keyword' => $d->name.' '.$d->color.' '.$d->size
+				'keyword' => $d->name.' '.strtoupper($d->color).' '.$d->size
 			]);
 		}
 	}

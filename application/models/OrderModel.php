@@ -118,9 +118,9 @@ class OrderModel extends CI_Model
     {
         $keyword = $this->input->post('keyword', true);
 		$this->db->select('*');
-		$this->db->like('name', $keyword);
-		$this->db->like('color', $keyword);
-		$this->db->like('size', $keyword);
+		$this->db->like('name', $keyword, 'after');
+		$this->db->or_like('color', $keyword, 'after');
+		$this->db->or_like('size', $keyword, 'after');
 		$data = $this->db->order_by('name ASC, color ASC, size ASC')->limit(10)->get('products')->result_object();
 
         if ($data) {

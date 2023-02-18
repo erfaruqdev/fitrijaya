@@ -188,8 +188,10 @@ class ProductModel extends CI_Model
 
         if ($name != '') {
             $this->db->like('a.name', $name);
+			$this->db->or_like('a.color', $name);
+			$this->db->or_like('a.size', $name);
         }
-        $result = $this->db->order_by('a.size ASC, a.created_at DESC')->get();
+        $result = $this->db->order_by('a.name ASC, a.color ASC, a.size ASC, a.created_at DESC')->get();
 
         return [
             $result->result_object(),

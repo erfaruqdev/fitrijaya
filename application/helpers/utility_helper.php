@@ -205,7 +205,7 @@ function terbilang($nilai)
 
 function convertSize($size, $categoryId)
 {
-	if ($categoryId === 2) {
+	if ($categoryId == 2) {
 		if ($size == 9) {
 			$size = 'NO. 9/S';
 		}elseif ($size == 10) {
@@ -221,7 +221,7 @@ function convertSize($size, $categoryId)
 		}else {
 			$size = 'NO. '.$size;
 		}
-	} elseif ($categoryId === 3) {
+	} elseif ($categoryId == 3) {
 		$size = 'NO. '.$size;
 	} else {
 		$size = '';

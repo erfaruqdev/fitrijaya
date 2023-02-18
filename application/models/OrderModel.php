@@ -117,11 +117,12 @@ class OrderModel extends CI_Model
     public function getProduct()
     {
         $keyword = $this->input->post('keyword', true);
-		$this->db->select('*')->from('products');
+
+		$this->db->select('*');
 		$this->db->like('name', $keyword, 'after');
 		$this->db->or_like('color', $keyword, 'after');
 		$this->db->or_like('size', $keyword, 'after');
-		$data = $this->db->order_by('name ASC, color ASC, size ASC')->limit(10)->get()->result_object();
+		$data = $this->db->order_by('name ASC, color ASC, size ASC')->limit(10)->get('products')->result_object();
 
         if ($data) {
             foreach ($data as $d) {

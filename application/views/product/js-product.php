@@ -104,12 +104,12 @@
                 required: true,
                 number: true
             },
-            color: {
-                required: true
-            },
-            size: {
-                required: true
-            },
+            // color: {
+            //     required: true
+            // },
+            // size: {
+            //     required: true
+            // },
             price: {
                 required: true
             },
@@ -140,12 +140,12 @@
                 required: 'Isi kuantitas satuan',
                 number: 'Harus angka'
             },
-            color: {
-                required: 'Pilih dulu warna barang'
-            },
-            size: {
-                required: 'Pilih dulu ukuran barang'
-            },
+            // color: {
+            //     required: 'Pilih dulu warna barang'
+            // },
+            // size: {
+            //     required: 'Pilih dulu ukuran barang'
+            // },
             price: {
                 required: 'Harga harus diisi'
             },

@@ -223,6 +223,7 @@
                     // $('#price-three').val(res.data.price_three)
                 }
                 $('#name').val(res.data.name)
+                $('#brand').val(res.data.brand)
                 $('#category').val(res.data.category)
                 $('#package').val(res.data.package)
                 $('#unit').val(res.data.unit)

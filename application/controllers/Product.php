@@ -83,4 +83,14 @@ class Product extends CI_Controller
 
         echo json_encode($result);
     }
+
+	public function setEngine()
+	{
+		$data = $this->db->get('products')->result_object();
+		foreach ($data as $d) {
+			$this->db->where('id', $d->id)->update('products', [
+				'keyword' => $d->name.' '.$d->color.' '.$d->size
+			]);
+		}
+	}
 }

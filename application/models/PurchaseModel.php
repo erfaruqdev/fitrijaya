@@ -117,9 +117,7 @@ class PurchaseModel extends CI_Model
         $keyword = $this->input->post('keyword', true);
 
 		$this->db->select('*');
-		$this->db->like('name', $keyword, 'after');
-		$this->db->or_like('color', $keyword, 'after');
-		$this->db->or_like('size', $keyword, 'after');
+		$this->db->like('keyword', $keyword);
 		$data = $this->db->order_by('name ASC, color ASC, size ASC')->limit(10)->get('products')->result_object();
         
         if ($data) {

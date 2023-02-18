@@ -49,7 +49,7 @@ class ProductModel extends CI_Model
 		$priceTwo = (int)$priceTwo;
 		$priceThree = (int)$priceThree;
 
-        if ($name == '' || $brand == '' || $category == '' || $package == '' || $unit == '' || $amount == '' || $color == '' || $size == '') {
+        if ($name == '' || $brand == '' || $category == '' || $package == '' || $unit == '' || $amount == '') {
             return [
                 'status' => 400,
                 'message' => 'Pastikan semua bidang inputan sudah diisi'

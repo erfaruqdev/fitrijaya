@@ -15,6 +15,7 @@ class Product extends CI_Controller
     {
         $data = [
             'title' => 'Data Produk',
+            'brands' => $this->pm->brands(),
             'categories' => $this->pm->categories(),
             'packages' => $this->pm->packages(),
             'units' => $this->pm->units(),

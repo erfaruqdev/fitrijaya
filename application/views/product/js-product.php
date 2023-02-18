@@ -36,12 +36,16 @@
 
         let name = $('#changeName').val()
         let category = $('#changeCategory').val()
+        let color = $('#changeColor').val()
+        let brand = $('#changeBrand').val()
         $.ajax({
             url: `${url}product/loaddata`,
             method: 'POST',
             data: {
                 name,
-                category
+                category,
+				color,
+				brand
             },
             success: function(response) {
                 $('#show-product').html(response)
@@ -84,7 +88,10 @@
             name: {
                 required: true
             },
-            category: {
+            brand: {
+                required: true
+            },
+			category: {
                 required: true
             },
             package: {
@@ -117,7 +124,10 @@
             name: {
                 required: 'Isi dulu nama barang'
             },
-            category: {
+            brand: {
+                required: 'Pilih dulu merk barang'
+            },
+			category: {
                 required: 'Pilih dulu kategori barang'
             },
             package: {
@@ -213,6 +223,7 @@
                     // $('#price-three').val(res.data.price_three)
                 }
                 $('#name').val(res.data.name)
+                $('#brand').val(res.data.brand)
                 $('#category').val(res.data.category)
                 $('#package').val(res.data.package)
                 $('#unit').val(res.data.unit)

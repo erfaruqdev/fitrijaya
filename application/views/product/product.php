@@ -4,10 +4,24 @@
     <!-- Main content -->
     <section class="content p-3">
         <div class="row mb-2">
-            <div class="col-6 col-sm-12 col-md-6 col-lg-4 col-xl-4 mb-2">
+            <div class="col-6 col-sm-12 col-md-6 col-lg-3 col-xl-3 mb-2">
                 <input type="text" autocomplete="off" id="changeName" class="form-control form-control-sm w-100" placeholder="Cara nama (F2)" autofocus onkeyup="loadData()">
             </div>
-            <div class="col-6 col-sm-12 col-md-6 col-lg-3 col-xl-3 mb-2">
+			<div class="col-6 col-sm-12 col-md-6 col-lg-3 col-xl- mb-2">
+				<select id="changeBrand" onchange="loadData()" class="form-control form-control-sm w-100">
+					<option value="">..:Semua Merk:..</option>
+					<?php
+					if ($brands) {
+						foreach ($brands as $brand) {
+							?>
+							<option value="<?= $brand->id ?>"><?= $brand->name ?></option>
+							<?php
+						}
+					}
+					?>
+				</select>
+			</div>
+            <div class="col-6 col-sm-12 col-md-6 col-lg-2 col-xl-2 mb-2">
                 <select id="changeCategory" onchange="loadData()" class="form-control form-control-sm w-100" style="width: 150px">
                     <option value="">..:Semua Kategori:..</option>
                     <?php
@@ -21,12 +35,20 @@
                     ?>
                 </select>
             </div>
-            <div class="col-6 col-sm-12 col-md-6 col-lg-3 col-xl-3 mb-2">
-                <a href="<?= base_url() ?>product/pdf" target="_blank" class="btn mr-2 btn-sm btn-success btn-block">
-                    <i class="fa fa-download"></i>
-                    Export to PDF
-                </a>
-            </div>
+			<div class="col-6 col-sm-12 col-md-6 col-lg-2 col-xl-2 mb-2">
+				<select id="changeColor" onchange="loadData()" class="form-control form-control-sm w-100">
+					<option value="">..:Semua Warna:..</option>
+					<?php
+					if ($colors) {
+						foreach ($colors as $color) {
+							?>
+							<option value="<?= $color->name ?>"><?= $color->name ?></option>
+							<?php
+						}
+					}
+					?>
+				</select>
+			</div>
             <div class="col-6 col-sm-12 col-md-6 col-lg-2 col-xl-2 mb-2">
                 <button type="button" class="btn mr-2 btn-sm btn-success btn-block" data-toggle="modal" data-target="#modal-product">
                     <i class="fa fa-plus-circle"></i>
@@ -89,61 +111,76 @@
                     </div>
                     <div class="form-group row">
                         <label for="category" class="col-sm-4 col-form-label">Kategori</label>
-                        <div class="col-sm-8 form-feedback">
-                            <select name="category" id="category" class="form-control">
-                                <option value="">.:Pilih Kategori:.</option>
-                                <?php
-                                if ($categories) {
-                                    foreach ($categories as $category) {
-                                ?>
-                                        <option value="<?= $category->id ?>"><?= $category->name ?></option>
-                                <?php
-                                    }
-                                }
-                                ?>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <label for="package" class="col-sm-4 col-form-label">Paket</label>
-                        <div class="col-sm-8 form-feedback">
-                            <select name="package" id="package" class="form-control">
-                                <option value="">.:Pilih Paket:.</option>
-                                <?php
-                                if ($packages) {
-                                    foreach ($packages as $package) {
-                                ?>
-                                        <option value="<?= $package->id ?>"><?= $package->name ?></option>
-                                <?php
-                                    }
-                                }
-                                ?>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <label for="unit" class="col-sm-4 col-form-label">Satuan</label>
                         <div class="col-sm-8">
-                            <div class="row">
-                                <div class="col-8 col-sm-8 mb-sm-0 form-feedback">
-                                    <select name="unit" id="unit" class="form-control">
-                                        <option value="">.:Pilih Satuan:.</option>
-                                        <?php
-                                        if ($units) {
-                                            foreach ($units as $unit) {
-                                        ?>
-                                                <option value="<?= $unit->id ?>"><?= $unit->name ?></option>
-                                        <?php
-                                            }
-                                        }
-                                        ?>
-                                    </select>
-                                </div>
-                                <div class="col-4 col-sm-4 mb-sm-0 form-feedback">
-                                    <input type="number" id="amount" name="amount" class="form-control text-capitalize">
-                                </div>
-                            </div>
+							<div class="row">
+								<div class="col-7 mb-sm-0 form-feedback">
+									<select name="brand" id="brand" class="form-control">
+										<option value="">.:Pilih Merk:.</option>
+										<?php
+										if ($brands) {
+											foreach ($brands as $brand) {
+												?>
+												<option value="<?= $brand->id ?>"><?= $brand->name ?></option>
+												<?php
+											}
+										}
+										?>
+									</select>
+								</div>
+								<div class="col-5 mb-sm-0 form-feedback">
+									<select name="category" id="category" class="form-control">
+										<option value="">.:Pilih Kategori:.</option>
+										<?php
+										if ($categories) {
+											foreach ($categories as $category) {
+												?>
+												<option value="<?= $category->id ?>"><?= $category->name ?></option>
+												<?php
+											}
+										}
+										?>
+									</select>
+								</div>
+							</div>
                         </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="package" class="col-sm-4 col-form-label">Paket | Satuan | Jumlah</label>
+						<div class="col-sm-8">
+							<div class="row">
+								<div class="col-5 mb-sm-0 form-feedback">
+									<select name="package" id="package" class="form-control">
+										<option value="">.:Pilih Paket:.</option>
+										<?php
+										if ($packages) {
+											foreach ($packages as $package) {
+												?>
+												<option value="<?= $package->id ?>"><?= $package->name ?></option>
+												<?php
+											}
+										}
+										?>
+									</select>
+								</div>
+								<div class="col-5 mb-sm-0 form-feedback">
+									<select name="unit" id="unit" class="form-control">
+										<option value="">.:Pilih Satuan:.</option>
+										<?php
+										if ($units) {
+											foreach ($units as $unit) {
+												?>
+												<option value="<?= $unit->id ?>"><?= $unit->name ?></option>
+												<?php
+											}
+										}
+										?>
+									</select>
+								</div>
+								<div class="col-2 mb-sm-0 form-feedback">
+									<input type="number" id="amount" name="amount" class="form-control text-capitalize">
+								</div>
+							</div>
+						</div>
                     </div>
                     <div class="form-group row">
                         <label for="unit" class="col-sm-4 col-form-label">Warna | Ukuran</label>

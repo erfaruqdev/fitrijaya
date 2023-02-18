@@ -11,6 +11,11 @@ class ProductModel extends CI_Model
         return $this->db->get('categories')->result_object();
     }
 
+	public function brands()
+    {
+        return $this->db->order_by('order', 'ASC')->get('brands')->result_object();
+    }
+
     public function packages()
     {
         return $this->db->get('packages')->result_object();
@@ -30,6 +35,7 @@ class ProductModel extends CI_Model
     {
         $id = $this->input->post('id', true);
         $name = $this->input->post('name', true);
+        $brand = $this->input->post('brand', true);
         $category = $this->input->post('category', true);
         $package = $this->input->post('package', true);
         $unit = $this->input->post('unit', true);
@@ -43,7 +49,7 @@ class ProductModel extends CI_Model
 		$priceTwo = (int)$priceTwo;
 		$priceThree = (int)$priceThree;
 
-        if ($name == '' || $category == '' || $package == '' || $unit == '' || $amount == '' || $color == '' || $size == '') {
+        if ($name == '' || $brand == '' || $category == '' || $package == '' || $unit == '' || $amount == '' || $color == '' || $size == '') {
             return [
                 'status' => 400,
                 'message' => 'Pastikan semua bidang inputan sudah diisi'
@@ -56,6 +62,7 @@ class ProductModel extends CI_Model
             $data = [
                 'id' => $idGenerator,
                 'name' => strtoupper($name),
+				'brand_id' => $brand,
                 'category_id' => $category,
                 'package_id' => $package,
                 'unit_id' => $unit,
@@ -115,6 +122,7 @@ class ProductModel extends CI_Model
         } else {
             $data = [
                 'name' => strtoupper($name),
+				'brand_id' => $brand,
                 'category_id' => $category,
                 'package_id' => $package,
                 'unit_id' => $unit,
@@ -176,21 +184,29 @@ class ProductModel extends CI_Model
     {
         $name = $this->input->post('name', true);
         $category = $this->input->post('category', true);
+        $color = $this->input->post('color', true);
+        $brand = $this->input->post('brand', true);
 
         $this->db->select('a.*, b.name AS category, c.name AS package, d.name AS unit')->from('products AS a');
         $this->db->join('categories AS b', 'a.category_id = b.id');
         $this->db->join('packages AS c', 'a.package_id = c.id');
         $this->db->join('units AS d', 'a.unit_id = d.id');
 
-		if ($name != '') {
-			$this->db->like('a.name', $name, 'after');
-			$this->db->or_like('a.color', $name, 'after');
-			$this->db->or_like('a.size', $name, 'after');
+		if ($brand != '') {
+			$this->db->where('a.brand_id', $brand);
 		}
 
-        if ($category != '') {
-            $this->db->where('a.category_id', $category);
-        }
+		if ($category != '') {
+			$this->db->where('a.category_id', $category);
+		}
+
+		if ($color != '') {
+			$this->db->where('a.color', $color);
+		}
+
+		if ($name != '') {
+			$this->db->like('a.name', $name);
+		}
 
         $result = $this->db->order_by('a.name ASC, a.color ASC, a.size ASC')->get();
 
@@ -219,6 +235,7 @@ class ProductModel extends CI_Model
             'message' => 'Success',
             'data' => [
                 'name' => $check->name,
+				'brand' => $check->brand_id,
                 'category' => $check->category_id,
                 'package' => $check->package_id,
                 'unit' => $check->unit_id,

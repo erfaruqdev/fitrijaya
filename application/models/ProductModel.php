@@ -182,15 +182,16 @@ class ProductModel extends CI_Model
         $this->db->join('packages AS c', 'a.package_id = c.id');
         $this->db->join('units AS d', 'a.unit_id = d.id');
 
+		if ($name != '') {
+			$this->db->like('a.name', $name);
+			$this->db->or_like('a.color', $name);
+			$this->db->or_like('a.size', $name);
+		}
+
         if ($category != '') {
             $this->db->where('a.category_id', $category);
         }
 
-        if ($name != '') {
-            $this->db->like('a.name', $name);
-			$this->db->or_like('a.color', $name);
-			$this->db->or_like('a.size', $name);
-        }
         $result = $this->db->order_by('a.name ASC, a.color ASC, a.size ASC, a.created_at DESC')->get();
 
         return [
@@ -228,41 +229,6 @@ class ProductModel extends CI_Model
                 'price_two' => $check->price_two,
                 'price_three' => $check->price_three,
             ]
-        ];
-    }
-
-    public function getImage()
-    {
-        $id = $this->input->post('id', true);
-        $check = $this->db->get_where('products', ['id' => $id])->row_object();
-        return $check->image;
-    }
-
-    public function upload($image)
-    {
-        $id = $this->input->post('id', true);
-        $check = $this->db->get_where('products', ['id' => $id])->num_rows();
-        if ($id == '' || $id == 0 || $check <= 0) {
-            return [
-                'status' => 400,
-                'message' => 'Produk tidak ditemukan'
-            ];
-        }
-
-        $this->db->where('id', $id)->update('products', [
-            'image' => $image, 'updated_at' => date('Y-m-d H:i:s')
-        ]);
-
-        if ($this->db->affected_rows() <= 0) {
-            return [
-                'status' => 400,
-                'message' => 'Server tidak merespon'
-            ];
-        }
-
-        return [
-            'status' => 200,
-            'message' => 'Image berhasil diupload'
         ];
     }
 

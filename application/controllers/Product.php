@@ -82,44 +82,4 @@ class Product extends CI_Controller
 
         echo json_encode($result);
     }
-
-    public function upload()
-    {
-        //AMBIL IMAGE SEBELUMNYA
-        $oldImage = $this->pm->getImage();
-
-        //AMBIL EKSTENSI IMAGE
-        $nameFile = explode('.', $_FILES['image']['name']);
-        //RENAME IMAGE SEBELUM DIUPLOAD
-        $image = uniqid() . '-' . time() . '.' . end($nameFile);
-
-        $config['upload_path'] = './assets/images/products';
-        $config['allowed_types'] = 'jpg|png';
-        $config['file_name'] = $image;
-
-        $upload = $this->pm->upload($image);
-        if ($upload['status'] == 400) {
-            $result = $upload;
-        } else {
-            $this->load->library('upload', $config);
-
-            if (!$this->upload->do_upload('image')) {
-                $result = [
-                    'status' => 400,
-                    'message' => $this->upload->display_errors()
-                ];
-            } else {
-                $pathImageOld = FCPATH . 'assets/images/products/' . $oldImage;
-                if (file_exists($pathImageOld === TRUE)) {
-                    unlink($pathImageOld);
-                }
-                $result = [
-                    'status' => 200,
-                    'message' => 'Image berhasil diupload'
-                ];
-            }
-
-            echo json_encode($result);
-        }
-    }
 }

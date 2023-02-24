@@ -9,8 +9,8 @@
     <style>
         * {
             /*font-family: Verdana, Geneva, Tahoma, sans-serif;*/
-			font-family: 'Courier New', Courier, monospace;
-            /* font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif; */
+			/*font-family: 'Courier New', Courier, monospace;*/
+             font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
             font-size: 9pt;
         }
 

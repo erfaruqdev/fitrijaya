@@ -125,7 +125,8 @@ class PurchaseModel extends CI_Model
 				$response[] = [
 					'label' => $d->name.' '.strtoupper($d->color).' '.convertSize($d->size, $d->category_id),
 					'value' => $d->name.' '.strtoupper($d->color).' '.convertSize($d->size, $d->category_id),
-					'id' => $d->id
+					'id' => $d->id,
+					'price' => $this->lastPrice($d->id)
 				];
 			}
 		}
@@ -135,11 +136,15 @@ class PurchaseModel extends CI_Model
 
     public function lastPrice($id)
     {
-        $getLastPrice = $this->db->order_by('created_at', 'DESC')->get_where('log_price', [
+//        $getLastPrice = $this->db->order_by('created_at', 'DESC')->get_where('log_price', [
+//            'product_id' => $id
+//        ])->row_object();
+
+		$getLastPrice = $this->db->order_by('created_at', 'DESC')->get_where('purchase_detail', [
             'product_id' => $id
         ])->row_object();
         if ($getLastPrice) {
-            return $getLastPrice->price;
+            return $getLastPrice->nominal;
         }else {
             return 0;
         }

@@ -112,27 +112,26 @@ class PurchaseModel extends CI_Model
         }
     }
 
-    public function getProduct()
-    {
-        $keyword = $this->input->post('keyword', true);
+	public function getProduct()
+	{
+		$keyword = $this->input->post('keyword', true);
 
 		$this->db->select('*');
 		$this->db->like('keyword', $keyword);
-		$data = $this->db->order_by('name ASC, color ASC, size ASC')->limit(10)->get('products')->result_object();
-        
-        if ($data) {
-            foreach ($data as $d) {
-                $response[] = [
-                    'label' => $d->name.' '.strtoupper($d->color).' '.convertSize($d->size, $d->category_id),
-                    'value' => $d->name.' '.strtoupper($d->color).' '.convertSize($d->size, $d->category_id),
-                    'id' => $d->id,
-                    'price' => number_format($this->lastPrice($d->id), 0, ',', '.')
-                ];
-            }
-        }
+		$data = $this->db->order_by('size ASC, color ASC, name ASC')->limit(10)->get('products')->result_object();
 
-        return $response;
-    }
+		if ($data) {
+			foreach ($data as $d) {
+				$response[] = [
+					'label' => $d->name.' '.strtoupper($d->color).' '.convertSize($d->size, $d->category_id),
+					'value' => $d->name.' '.strtoupper($d->color).' '.convertSize($d->size, $d->category_id),
+					'id' => $d->id
+				];
+			}
+		}
+
+		return $response;
+	}
 
     public function lastPrice($id)
     {

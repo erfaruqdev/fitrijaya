@@ -91,7 +91,7 @@ class Product extends CI_Controller
 		$data = $this->db->get()->result_object();
 		foreach ($data as $d) {
 			$color = strtoupper($d->color);
-			$size = convertSize($d->size, $d->category_id);
+			$size = convertSizePrint($d->size, $d->category_id);
 
 			$this->db->where('id', $d->id)->update('products', [
 				'keyword' => "$size $d->short_name $color"

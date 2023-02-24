@@ -34,7 +34,11 @@
             }
         } else {
             ?>
-            <span class="text-danger text-center">Tidak ada data</span>
+				<div class="row">
+					<div class="col-12 text-center text-danger">
+						Tidak ada barang
+					</div>
+				</div>
         <?php
         }
         ?>

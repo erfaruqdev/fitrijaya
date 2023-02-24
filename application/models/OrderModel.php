@@ -120,7 +120,7 @@ class OrderModel extends CI_Model
 
 		$this->db->select('*');
 		$this->db->like('keyword', $keyword);
-		$data = $this->db->order_by('name ASC, color ASC, size ASC')->limit(10)->get('products')->result_object();
+		$data = $this->db->order_by('size ASC, color ASC, name ASC')->limit(10)->get('products')->result_object();
 
         if ($data) {
             foreach ($data as $d) {

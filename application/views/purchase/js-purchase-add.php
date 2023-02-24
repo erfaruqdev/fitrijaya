@@ -92,9 +92,15 @@
                     data: {
                         keyword: request.term
                     },
+					beforeSend: function() {
+						$('.wrap-loading__').show()
+					},
                     success: function(data) {
                         response(data);
-                    }
+                    },
+					complete: function () {
+						$('.wrap-loading__').hide()
+					}
                 });
             },
             select: function(event, ui) {

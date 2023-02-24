@@ -140,7 +140,7 @@ class PurchaseModel extends CI_Model
 //            'product_id' => $id
 //        ])->row_object();
 
-		$getLastPrice = $this->db->order_by('created_at', 'DESC')->get_where('purchase_detail', [
+		$getLastPrice = $this->db->order_by('id', 'DESC')->get_where('purchase_detail', [
             'product_id' => $id
         ])->row_object();
         if ($getLastPrice) {

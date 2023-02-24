@@ -506,10 +506,10 @@ class OrderModel extends CI_Model
 			];
 		}
 
-		$this->db->select('a.*, b.name AS product, b.color, b.size, b.category_id')->from('order_detail AS a');
-		$this->db->join('products AS b', 'a.product_id = b.id');
+		$this->db->select('a.price, SUM(a.qty) as qty, SUM(a.amount) as amount, b.name AS product, b.color, b.size, b.category_id, c.name as brand')->from('order_detail AS a');
+		$this->db->join('products AS b', 'a.product_id = b.id')->join('brands as c', 'c.id = b.brand_id');
 		$this->db->where('a.order_id', $id);
-		$result = $this->db->order_by('a.id', 'ASC')->get();
+		$result = $this->db->order_by('c.order ASC, b.size ASC')->group_by(['b.brand_id', 'b.size'])->get();
 		$datas = $result->result_object();
 		$count = $result->num_rows();
 		if (!$datas) {
@@ -523,7 +523,7 @@ class OrderModel extends CI_Model
 		$item = 0;
 		foreach ($datas as $d) {
 			$data[] = [
-				'product' => $d->product.' '.strtoupper($d->color).' '.convertSize($d->size, $d->category_id),
+				'product' => $d->brand.' '.convertSizePrint($d->size, $d->category_id),
 				'qty' => $d->qty,
 				'price' => $d->price,
 				'amount' => $d->amount

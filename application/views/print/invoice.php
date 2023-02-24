@@ -8,9 +8,10 @@
     <link rel="shortcut icon" href="<?= base_url() ?>/assets/images/favicon.png">
     <style>
         * {
-            font-family: Verdana, Geneva, Tahoma, sans-serif;
+            /*font-family: Verdana, Geneva, Tahoma, sans-serif;*/
+			font-family: 'Courier New', Courier, monospace;
             /* font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif; */
-            font-size: 10pt;
+            font-size: 9pt;
         }
 
         .container {
@@ -230,10 +231,8 @@
                             foreach ($data['data'] as $d) {
                             ?>
                                 <tr>
-                                    <td colspan="4"><?= $d['product'] ?></td>
-                                </tr>
-                                <tr>
-                                    <td class="pl-2"><?= $d['qty'] ?>x</td>
+									<td><?= $d['product'] ?></td>
+                                    <td class="text-center"><?= $d['qty'] ?></td>
                                     <td class="text-right"><?= number_format($d['price'], 0, ',', '.') ?></td>
                                     <td class="text-right"><?= number_format($d['amount'], 0, ',', '.') ?></td>
                                 </tr>
@@ -255,9 +254,9 @@
                 <div class="col-12">
                     <table class="table mb-0">
                         <tr>
-                            <td>Total</td>
-                            <td>Rp.</td>
-                            <td class="text-right">
+                            <td style="width: 60%">Total</td>
+                            <td style="width: 5%">Rp.</td>
+                            <td class="text-right" style="width: 35%">
                                 <?= number_format($data['amount'], 0, ',', '.') ?>
                             </td>
                         </tr>

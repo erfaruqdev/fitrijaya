@@ -249,3 +249,29 @@ function convertSizeShort($size) {
 
 	return $size;
 }
+
+function convertSizePrint($size, $categoryId){
+	if ($categoryId == 2) {
+		if ($size == 9) {
+			$size = '9/S';
+		}elseif ($size == 10) {
+			$size = 'M';
+		}elseif ($size == 11) {
+			$size = 'L';
+		}elseif ($size == 12) {
+			$size = 'XL';
+		}elseif ($size == 13) {
+			$size = 'XXL';
+		}elseif ($size == 14) {
+			$size = 'XXXL';
+		}else {
+			$size = $size;
+		}
+	} elseif ($categoryId == 3) {
+		$size = $size;
+	} else {
+		$size = '';
+	}
+
+	return $size;
+}

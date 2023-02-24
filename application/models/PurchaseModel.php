@@ -126,7 +126,7 @@ class PurchaseModel extends CI_Model
 					'label' => $d->name.' '.strtoupper($d->color).' '.convertSize($d->size, $d->category_id),
 					'value' => $d->name.' '.strtoupper($d->color).' '.convertSize($d->size, $d->category_id),
 					'id' => $d->id,
-					'price' => $this->lastPrice($d->id)
+					'price' => $this->lastPriceSame($d->brand_id, $d->size)
 				];
 			}
 		}
@@ -149,6 +149,19 @@ class PurchaseModel extends CI_Model
             return 0;
         }
     }
+
+	public function lastPriceSame($brand, $size)
+	{
+		$this->db->select('a.nominal')->from('purchase_detail as a');
+		$this->db->join('products as b', 'b.id = a.product_id');
+		$this->db->where(['b.brand_id' => $brand, 'b.size' => $size]);
+		$getLastPrice = $this->db->order_by('a.id', 'DESC')->get()->row_object();
+		if ($getLastPrice) {
+			return $getLastPrice->nominal;
+		}else {
+			return 0;
+		}
+	}
 
     public function loadData()
     {

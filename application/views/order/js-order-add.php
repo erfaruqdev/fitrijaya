@@ -128,22 +128,12 @@
         });
     });
 
-	const beforeGetProduct = () => {
-	  	let id = $('#product-id').val()
-		if (id == 0) {
-			return false
-		}
-
-		getDetailProduct(id)
-	}
-
     const getDetailProduct = id => {
         $.ajax({
             url: `${url}order/getdetailproduct`,
             method: 'POST',
             data: {
-                id,
-				price: $('#change-price').val()
+                id
             },
             dataType: 'JSON',
             beforeSend: function() {

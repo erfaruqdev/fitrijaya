@@ -138,7 +138,6 @@ class OrderModel extends CI_Model
     public function getDetailProduct()
     {
         $id = $this->input->post('id', true);
-		$price = $this->input->post('price', true);
 
 		$product = $this->db->get_where('products', ['id' => $id])->row_object();
 		if (!$product) {
@@ -148,20 +147,12 @@ class OrderModel extends CI_Model
 			];
 		}
 
-		if ($price === 'price') {
-			$price = $product->price;
-		}elseif ($price === 'price_two') {
-			$price = $product->price_two;
-		}else{
-			$price = $product->price_three;
-		}
-
 		return [
 			'status' => 200,
 			'message' => 'Sukses',
 			'stock' => $this->getProductStock($product->id),
-			'price' => $price,
-			'price_display' => number_format($price, 0, ',', '.')
+			'price' => $product->price_three,
+			'price_display' => number_format($product->price_three, 0, ',', '.')
 		];
     }
 
@@ -311,7 +302,6 @@ class OrderModel extends CI_Model
     {
         $orderId = $this->input->post('order_id', true);
         $productId = $this->input->post('product_id', true);
-        $price = $this->input->post('price', true);
         $qty = $this->input->post('qty', true);
 
         //GET PRODUCTS
@@ -322,6 +312,8 @@ class OrderModel extends CI_Model
                 'message' => 'Produk tidak valid'
             ];
         }
+
+		$price = $product->price_three;
 
         if ($qty <= 0) {
             return [

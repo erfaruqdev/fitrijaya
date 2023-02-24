@@ -1,4 +1,12 @@
 <div class="card">
+	<div class="card-header row py-2 justify-content-between">
+		<div class="col-6">
+			Item : <b><?= $item ?></b> barang
+		</div>
+		<div class="text-right col-6">
+			<b>Total : Rp. <?= $amount ?></b>
+		</div>
+	</div>
     <div class="card-body px-3 pt-2 pb-0">
         <?php
         if ($status == 200) {
@@ -26,17 +34,9 @@
             }
         } else {
             ?>
-            <b class="text-danger">Tidak ada data</b>
+            <span class="text-danger text-center">Tidak ada data</span>
         <?php
         }
         ?>
-    </div>
-    <div class="card-footer row py-2 justify-content-between">
-        <div class="col-6">
-            Item : <b><?= $item ?></b> barang
-        </div>
-        <div class="text-right col-6">
-            <b>Total : Rp. <?= $amount ?></b>
-        </div>
     </div>
 </div>

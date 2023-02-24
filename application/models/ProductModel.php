@@ -48,7 +48,6 @@ class ProductModel extends CI_Model
         $price = (int)$price;
 		$priceTwo = (int)$priceTwo;
 		$priceThree = (int)$priceThree;
-		$keyword = $name.' '.$color.''.convertSize($size, $category);
 
         if ($name == '' || $brand == '' || $category == '' || $package == '' || $unit == '' || $amount == '') {
             return [
@@ -56,6 +55,17 @@ class ProductModel extends CI_Model
                 'message' => 'Pastikan semua bidang inputan sudah diisi'
             ];
         }
+
+		//GET SHORT NAME OF BRAND
+		$getBrand = $this->db->get_where('brands', ['id' => $brand])->row_object();
+		if (!$getBrand) {
+			return [
+				'status' => 400,
+				'message' => 'Merk yang dipilih tidak valid'
+			];
+		}
+		$keywordSize = convertSize($size, $category);
+		$keyword = "$keywordSize $getBrand->short_name $color";
 
         
         if ($id == 0) {

@@ -69,33 +69,28 @@
                 <div class="col-md-12 col-lg-5 col-xl-5 mb-3">
                     <form id="form-order" autocomplete="off">
 						<div class="row mb-3">
-							<div class="col-5">
-								<select onchange="beforeGetProduct()" name="change_price" id="change-price" class="form-control form-control-sm">
-									<option value="price">Eceran</option>
-									<option value="price_two">Grosir I</option>
-									<option value="price_three">Grosir II</option>
-								</select>
-							</div>
-							<div class="col-7">
-								<div class="row skeleton_loading_product__" style="display:none;">
-									<div class="col-12">
-										<div class="card skeleton mb-0" style="height: 30px"></div>
-									</div>
-								</div>
-								<div class="callout callout-success text-xs py-1 mb-0" id="product-info" style="display: none;">
-									<div class="row justify-content-around">
-										<div id="show-stock">Stok: 23</div>
-										<div id="show-price">Rp. 23.000</div>
-									</div>
-								</div>
-							</div>
-						</div>
-						<div class="row mb-0">
 							<div class="col-9">
 								<input type="text" autofocus name="name" id="product-name" class="form-control form-control-sm" placeholder="Ketik nama barang">
 							</div>
 							<div class="col-3">
 								<input value="0" type="number" name="qty" id="qty" class="form-control form-control-sm" placeholder="QTY">
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-12">
+								<div class="row skeleton_loading_product__" style="display:none;">
+									<div class="col-12">
+										<div class="card skeleton mb-0" style="height: 30px"></div>
+									</div>
+								</div>
+								<div class="card bg-light mb-0">
+									<div class="card-body py-2" id="product-info" style="display: none;">
+										<div class="row justify-content-around">
+											<div>Stok: <span id="show-stock"></span></div>
+											<div>Harga: <span id="show-price"></span></div>
+										</div>
+									</div>
+								</div>
 							</div>
 						</div>
 						<input type="hidden" name="order_id" id="order-id" value="<?= $setting['invoice'] ?>">

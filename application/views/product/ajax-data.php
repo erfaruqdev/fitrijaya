@@ -46,8 +46,11 @@ if ($product) {
                                     </div>
                                 </div>
                                 <div class="col-3 col-md-2 col-lg-2 col-xl-2">
-                                    <button onclick="editProduct(<?= $data->id ?>, 'COPY')" type="button" class="btn btn-default btn-xs btn-block">
+                                    <!-- <button onclick="editProduct(<?= $data->id ?>, 'COPY')" type="button" class="btn btn-default btn-xs btn-block">
                                         Salin
+                                    </button> -->
+                                    <button onclick="deleteProduct(<?= $data->id ?>)" type="button" class="btn btn-primary btn-xs btn-block">
+                                        Hapus
                                     </button>
                                     <button type="button" title="Edit data" onclick="editProduct(<?= $data->id ?>, 'EDIT')" class="btn btn-success btn-xs btn-block">
                                         Edit

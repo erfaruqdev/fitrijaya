@@ -275,4 +275,22 @@ class ProductModel extends CI_Model
             $result->num_rows()
         ];
     }
+
+    public function delete()
+    {
+        $id = $this->input->post('id', true);
+
+        $this->db->where('id', $id)->delete('products');
+        if ($this->db->affected_rows() > 0) {
+            return [
+                'status' => 200,
+                'message' => 'Data tidak ditemukan'
+            ];
+        }
+
+        return [
+            'status' => 200,
+            'message' => 'Data tidak ditemukan'
+        ];
+    }
 }

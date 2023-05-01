@@ -84,6 +84,13 @@ class Product extends CI_Controller
         echo json_encode($result);
     }
 
+    public function delete()
+    {
+        $result = $this->pm->delete();
+
+        echo json_encode($result);
+    }
+
 	public function setEngine()
 	{
 		$this->db->select('a.id, a.color, a.size, a.category_id, b.short_name');

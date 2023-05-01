@@ -240,6 +240,29 @@
                 errorAlert(formatErrorMessage(jqXHR, errorThrown))
             })
     }
+
+    const deleteProduct = (id) => {
+        $.ajax({
+            url: `${url}product/delete`,
+            method: 'POST',
+            data: {
+                id
+            },
+            dataType: 'JSON',
+            beforeSend: function() {
+                $('.wrap-loading__').show()
+            },
+            success: function(res) {
+                $('.wrap-loading__').hide()
+                if (res.status == 400) {
+                    errorAlert(res.message)
+                    return false
+                }
+                toastr.success(`Yeaah..! product berhasil dihapus`)
+                loadData()
+            }
+        })
+    }
 </script>
 </body>
 

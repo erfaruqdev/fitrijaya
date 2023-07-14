@@ -1,13 +1,13 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 
-class OrderModel extends CI_Model
+class InstitutionModel extends CI_Model
 {
     public function setting()
     {
         $user = $this->session->userdata('user_id');
         $check = $this->db->get_where('orders', [
-            'user_id' => $user, 'status' => 'ACTIVE', 'type' => 0
+            'user_id' => $user, 'status' => 'ACTIVE', 'type' => 1
         ])->row_object();
 
         if (!$check) {
@@ -42,7 +42,7 @@ class OrderModel extends CI_Model
         if ($status == 'ADD') {
             //CHECK ACTIVE INVOICE
             $check = $this->db->get_where('orders', [
-                'user_id' => $user, 'status' => 'ACTIVE', 'type' => 0
+                'user_id' => $user, 'status' => 'ACTIVE', 'type' => 1
             ])->num_rows();
 
             if ($check > 0) {
@@ -70,7 +70,7 @@ class OrderModel extends CI_Model
                 'created_at' => date('Y-m-d H:i:s'),
                 'user_id' => $user,
 				'status' => 'ACTIVE',
-				'type' => 0
+				'type' => 1
             ]);
             if ($this->db->affected_rows() <= 0) {
                 return [
@@ -152,8 +152,8 @@ class OrderModel extends CI_Model
 			'status' => 200,
 			'message' => 'Sukses',
 			'stock' => $this->getProductStock($product->id),
-			'price' => $product->price_three,
-			'price_display' => number_format($product->price_three, 0, ',', '.')
+			'price' => $product->price_two,
+			'price_display' => number_format($product->price_two, 0, ',', '.')
 		];
     }
 
@@ -182,7 +182,7 @@ class OrderModel extends CI_Model
 
         $this->db->select('a.*, b.name AS customer, b.address');
         $this->db->from('orders AS a')->join('customers AS b', 'b.id = a.customer_id');
-        $this->db->where(['a.status !=' => 'ACTIVE', 'a.type' => 0]);
+        $this->db->where(['a.status !=' => 'ACTIVE', 'a.type' => 1]);
         if ($status != '') {
             $this->db->where('a.status', $status);
         }
@@ -314,7 +314,7 @@ class OrderModel extends CI_Model
             ];
         }
 
-		$price = $product->price_three;
+		$price = $product->price_two;
 
         if ($qty <= 0) {
             return [

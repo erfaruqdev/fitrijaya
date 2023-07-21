@@ -323,13 +323,13 @@ class InstitutionModel extends CI_Model
             ];
         }
 
-		$getQty = $this->getProductStock($productId);
-		if ($qty > $getQty) {
-			return [
-				'status' => 400,
-				'message' => 'Stok tidak cukup'
-			];
-		}
+//		$getQty = $this->getProductStock($productId);
+//		if ($qty > $getQty) {
+//			return [
+//				'status' => 400,
+//				'message' => 'Stok tidak cukup'
+//			];
+//		}
 
         //CHECK LAST PRODUCT IN SAME TRANSACTION
         $checkProductSameTransaction = $this->db->get_where('order_detail', [

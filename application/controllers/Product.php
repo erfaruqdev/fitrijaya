@@ -119,4 +119,18 @@ class Product extends CI_Controller
 
 		redirect('product');
 	}
+
+	public function setPriceFitri()
+	{
+		$data = $this->db->get('products')->result_object();
+		foreach ($data as $item) {
+			$price = $item->price_three;
+			$this->db->where('id', $item->id)->update('products', [
+				'price' => $price + 10000,
+				'price_two' => $price + 4000
+			]);
+		}
+
+		redirect('product');
+	}
 }

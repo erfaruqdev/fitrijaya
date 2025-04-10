@@ -132,4 +132,15 @@ class Product extends CI_Controller
 
 		redirect('product');
 	}
+
+	public function setSizeChange($brandId)
+	{
+		$products = $this->db->where('brand_id', $brandId)->get('products')->result_object();
+		foreach ($products as $product) {
+			$size = $product->size + 1;
+			$this->db->where('id', $product->id)->update('products', [
+				'size' => $size
+			]);
+		}
+	}
 }

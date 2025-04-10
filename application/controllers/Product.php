@@ -103,6 +103,7 @@ class Product extends CI_Controller
 				'keyword' => "$size $d->name"
 			]);
 		}
+		redirect('product');
 	}
 
 	public function setPrice()
@@ -142,5 +143,39 @@ class Product extends CI_Controller
 				'size' => $size
 			]);
 		}
+		redirect('product');
+	}
+
+	public function setPricePlus($brandId, $number)
+	{
+		$products = $this->db->where('brand_id', $brandId)->get('products')->result_object();
+		foreach ($products as $product) {
+			$price = $product->price + $number;
+			$this->db->where('id', $product->id)->update('products', [
+				'price' => $price
+			]);
+		}
+		redirect('product');
+	}
+
+	public function setPriceMinus($brandId, $number)
+	{
+		$products = $this->db->where('brand_id', $brandId)->get('products')->result_object();
+		foreach ($products as $product) {
+			$price = $product->price - $number;
+			$this->db->where('id', $product->id)->update('products', [
+				'price' => $price
+			]);
+		}
+		redirect('product');
+	}
+
+	public function setStock()
+	{
+		$this->db->update('products', [
+			'stock' => 10000
+		]);
+
+		redirect('product');
 	}
 }

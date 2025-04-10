@@ -176,7 +176,7 @@
                                     <select name="size" id="size" class="form-control">
                                         <option value="">.:Ukuran:.</option>
                                         <?php
-                                        for ($i=0; $i <= 35; $i++) {
+                                        for ($i=0; $i <= 45; $i++) {
                                             ?>
                                             <option value="<?= $i ?>"><?= convertSizeShort($i) ?></option>
                                             <?php

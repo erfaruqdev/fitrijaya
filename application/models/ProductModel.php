@@ -196,25 +196,15 @@ class ProductModel extends CI_Model
     public function loadData()
     {
         $name = $this->input->post('name', true);
-        $category = $this->input->post('category', true);
-        $color = $this->input->post('color', true);
         $brand = $this->input->post('brand', true);
 
-        $this->db->select('a.*, b.name AS category, c.name AS package, d.name AS unit')->from('products AS a');
-        $this->db->join('categories AS b', 'a.category_id = b.id');
+        $this->db->select('a.*, c.name AS package, d.name AS unit, e.name AS brand')->from('products AS a');
         $this->db->join('packages AS c', 'a.package_id = c.id');
         $this->db->join('units AS d', 'a.unit_id = d.id');
+		$this->db->join('brands AS e', 'a.brand_id = e.id');
 
 		if ($brand != '') {
 			$this->db->where('a.brand_id', $brand);
-		}
-
-		if ($category != '') {
-			$this->db->where('a.category_id', $category);
-		}
-
-		if ($color != '') {
-			$this->db->where('a.color', $color);
 		}
 
 		if ($name != '') {

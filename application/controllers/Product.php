@@ -93,15 +93,14 @@ class Product extends CI_Controller
 
 	public function setEngine()
 	{
-		$this->db->select('a.id, a.color, a.size, a.category_id, b.short_name');
+		$this->db->select('a.id, a.color, a.size, a.category_id, b.name');
 		$this->db->from('products as a')->join('brands as b', 'b.id = a.brand_id');
 		$data = $this->db->get()->result_object();
 		foreach ($data as $d) {
-			$color = strtoupper($d->color);
 			$size = convertSizePrint($d->size, $d->category_id);
 
 			$this->db->where('id', $d->id)->update('products', [
-				'keyword' => "$size $d->short_name $color"
+				'keyword' => "$size $d->name"
 			]);
 		}
 	}

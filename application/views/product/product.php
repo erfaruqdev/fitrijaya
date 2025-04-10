@@ -22,34 +22,6 @@
 				</select>
 			</div>
             <div class="col-6 col-sm-12 col-md-6 col-lg-2 col-xl-2 mb-2">
-                <select id="changeCategory" onchange="loadData()" class="form-control form-control-sm w-100" style="width: 150px">
-                    <option value="">..:Semua Kategori:..</option>
-                    <?php
-                    if ($categories) {
-                        foreach ($categories as $category) {
-                    ?>
-                            <option value="<?= $category->id ?>"><?= $category->name ?></option>
-                    <?php
-                        }
-                    }
-                    ?>
-                </select>
-            </div>
-			<div class="col-6 col-sm-12 col-md-6 col-lg-2 col-xl-2 mb-2">
-				<select id="changeColor" onchange="loadData()" class="form-control form-control-sm w-100">
-					<option value="">..:Semua Warna:..</option>
-					<?php
-					if ($colors) {
-						foreach ($colors as $color) {
-							?>
-							<option value="<?= $color->name ?>"><?= $color->name ?></option>
-							<?php
-						}
-					}
-					?>
-				</select>
-			</div>
-            <div class="col-6 col-sm-12 col-md-6 col-lg-2 col-xl-2 mb-2">
                 <button type="button" class="btn mr-2 btn-sm btn-success btn-block" data-toggle="modal" data-target="#modal-product">
                     <i class="fa fa-plus-circle"></i>
                     Tambah Barang

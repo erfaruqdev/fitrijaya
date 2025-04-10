@@ -119,15 +119,18 @@ class OrderModel extends CI_Model
     {
         $keyword = $this->input->post('keyword', true);
 
-		$this->db->select('*');
-		$this->db->like('keyword', $keyword);
-		$data = $this->db->order_by('size ASC, color ASC, name ASC')->limit(10)->get('products')->result_object();
+		$this->db->select('a.*, e.name AS brand')->from('products AS a');
+		$this->db->join('brands AS e', 'a.brand_id = e.id');
+		if ($keyword != '') {
+			$this->db->like('a.keyword', $keyword, 'after');
+		}
+		$data = $this->db->order_by('a.size ASC, a.name ASC')->limit(10)->get()->result_object();
 
         if ($data) {
             foreach ($data as $d) {
                 $response[] = [
-					'label' => $d->name.' '.strtoupper($d->color).' '.convertSize($d->size, $d->category_id),
-					'value' => $d->name.' '.strtoupper($d->color).' '.convertSize($d->size, $d->category_id),
+					'label' => $d->brand.' '.convertSize($d->size, $d->category_id),
+					'value' => $d->brand.' '.convertSize($d->size, $d->category_id),
                     'id' => $d->id
                 ];
             }

@@ -206,18 +206,22 @@ function terbilang($nilai)
 function convertSize($size, $categoryId)
 {
 	if ($categoryId == 2) {
-		if ($size == 9) {
-			$size = 'NO. 9/S';
-		}elseif ($size == 10) {
-			$size = 'NO. M';
+		if ($size == 10) {
+			$size = 'NO. S';
 		}elseif ($size == 11) {
-			$size = 'NO. L';
+			$size = 'NO. M';
 		}elseif ($size == 12) {
-			$size = 'NO. XL';
+			$size = 'NO. L';
 		}elseif ($size == 13) {
-			$size = 'NO. XXL';
+			$size = 'NO. XL';
 		}elseif ($size == 14) {
-			$size = 'NO. XXXL';
+			$size = 'NO. 2XL';
+		}elseif ($size == 15) {
+			$size = 'NO. 3XL';
+		}elseif ($size == 16) {
+			$size = 'NO. 4XL';
+		}elseif ($size == 17) {
+			$size = 'NO. 5XL';
 		}else {
 			$size = 'NO. '.$size;
 		}
@@ -231,18 +235,22 @@ function convertSize($size, $categoryId)
 }
 
 function convertSizeShort($size) {
-	if ($size == 9) {
-		$size = '9/S';
-	}elseif ($size == 10) {
-		$size = '10/M';
+	if ($size == 10) {
+		$size = '10/S';
 	}elseif ($size == 11) {
-		$size = '11/L';
+		$size = '11/M';
 	}elseif ($size == 12) {
-		$size = '12/XL';
+		$size = '12/L';
 	}elseif ($size == 13) {
-		$size = '13/XXL';
+		$size = '13/XL';
 	}elseif ($size == 14) {
-		$size = '14/XXXL';
+		$size = '14/2XL';
+	}elseif ($size == 15) {
+		$size = '15/3XL';
+	}elseif ($size == 16) {
+		$size = '16/4XL';
+	}elseif ($size == 17) {
+		$size = '17/5XL';
 	}else {
 		$size;
 	}
@@ -252,18 +260,22 @@ function convertSizeShort($size) {
 
 function convertSizePrint($size, $categoryId){
 	if ($categoryId == 2) {
-		if ($size == 9) {
-			$size = '9/S';
-		}elseif ($size == 10) {
-			$size = 'M';
+		if ($size == 10) {
+			$size = 'S';
 		}elseif ($size == 11) {
-			$size = 'L';
+			$size = 'M';
 		}elseif ($size == 12) {
-			$size = 'XL';
+			$size = 'L';
 		}elseif ($size == 13) {
-			$size = 'XXL';
+			$size = 'XL';
 		}elseif ($size == 14) {
-			$size = 'XXXL';
+			$size = '2XL';
+		}elseif ($size == 15) {
+			$size = '3XL';
+		}elseif ($size == 16) {
+			$size = '4XL';
+		}elseif ($size == 17) {
+			$size = '5XL';
 		}else {
 			$size = $size;
 		}

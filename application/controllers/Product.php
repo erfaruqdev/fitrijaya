@@ -150,7 +150,7 @@ class Product extends CI_Controller
 	{
 		$products = $this->db->where('brand_id', $brandId)->get('products')->result_object();
 		foreach ($products as $product) {
-			$price = $product->price + $number;
+			$price = $product->price + (int)$number;
 			$this->db->where('id', $product->id)->update('products', [
 				'price' => $price
 			]);
@@ -162,7 +162,7 @@ class Product extends CI_Controller
 	{
 		$products = $this->db->where('brand_id', $brandId)->get('products')->result_object();
 		foreach ($products as $product) {
-			$price = $product->price - $number;
+			$price = $product->price - (int)$number;
 			$this->db->where('id', $product->id)->update('products', [
 				'price' => $price
 			]);

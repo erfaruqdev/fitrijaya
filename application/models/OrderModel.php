@@ -61,7 +61,7 @@ class OrderModel extends CI_Model
                 ];
             }
 
-            $id = mt_rand(1000, 9999) . date('Y') . date('m') . date('d');
+            $id = date('Y') . date('m') . date('d').date('His');
             $this->db->insert('orders', [
                 'id' => $id,
                 'customer_id' => $customer,
@@ -227,8 +227,9 @@ class OrderModel extends CI_Model
     {
         $invoice = $this->input->post('invoice', true);
 
-        $this->db->select('a.*, b.name, b.color, b.size, b.category_id')->from('order_detail AS a');
+        $this->db->select('a.*, b.name, b.color, b.size, b.category_id, c.name as brand')->from('order_detail AS a');
         $this->db->join('products AS b', 'a.product_id = b.id');
+        $this->db->join('brands AS c', 'b.brand_id = c.id');
         $this->db->where('a.order_id', $invoice);
         $result = $this->db->order_by('a.id', 'DESC')->get();
 
@@ -239,7 +240,7 @@ class OrderModel extends CI_Model
             foreach ($data as $d) {
                 $rows[] = [
                     'id' => $d->id,
-                    'product' => $d->name.' '.strtoupper($d->color).' '.convertSize($d->size, $d->category_id),
+                    'product' => $d->brand.' '.convertSize($d->size, $d->category_id),
                     'qty' => $d->qty,
                     'price' => number_format($d->price, 0, ',', '.'),
                     'amount' => number_format($d->amount, 0, ',', '.')

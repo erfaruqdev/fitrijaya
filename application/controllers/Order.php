@@ -13,17 +13,11 @@ class Order extends CI_Controller
 
     public function index()
     {
-        $setting = $this->om->setting();
-
-        if ($setting['invoice'] != 0) {
-            redirect('order/add');
-        } else {
-            $data = [
-                'title' => 'Transaksi Pemesanan',
-                'customer' => $this->om->customer()
-            ];
-            $this->load->view('order/order', $data);
-        }
+		$data = [
+			'title' => 'Transaksi Pemesanan',
+			'customer' => $this->om->customer()
+		];
+		$this->load->view('order/order', $data);
     }
 
     public function loadData()
@@ -126,4 +120,12 @@ class Order extends CI_Controller
         ];
         $this->load->view('print/invoice', $data);
     }
+
+	public function cancel()
+	{
+		$id = $this->input->post('id', TRUE);
+		$result = $this->om->cancel($id);
+
+		echo json_encode($result);
+	}
 }

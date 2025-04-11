@@ -103,6 +103,52 @@
             }
         })
     }
+
+	const cancelTransaction = id => {
+		Swal.fire({
+			title: 'Yakin, nih?',
+			text: 'Lanjut jika ada transaksi yang tidak valid',
+			icon: 'warning',
+			showCancelButton: true,
+			confirmButtonColor: '#3085d6',
+			cancelButtonColor: '#d33',
+			confirmButtonText: 'Yakin, dong!',
+			cancelButtonText: 'Nggak jadi',
+		}).then((result) => {
+			if (result.isConfirmed) {
+				$.ajax({
+					url: `${url}order/cancel`,
+					method: 'POST',
+					data: {
+						id
+					},
+					dataType: 'JSON',
+					success: function(res) {
+						if (res.status == 400) {
+							errorAlert(res.message)
+							return false
+						}
+						alertAction(res.url)
+					}
+				})
+			}
+		})
+	}
+
+	const alertAction = (url) => {
+		Swal.fire({
+			title: "Transaksi berhasil dibatalkan",
+			icon: 'success',
+			html: 'Anda akan diarahkan dalam <strong>2</strong> detik.<br/><br/>',
+			timer: 2000,
+			timerProgressBar: true
+		})
+		setTimeout(function() {
+			if (url !== 0) {
+				window.open(url);
+			}
+		}, 2000)
+	}
 </script>
 </body>
 

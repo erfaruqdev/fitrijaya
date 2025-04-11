@@ -41,9 +41,12 @@ if ($datas) {
 							</div>
 						</div>
 						<div class="col-2">
-							<a href="<?= base_url() ?>order/printout/<?= encrypt_url($data->id) ?>" class="btn btn-xs btn-default btn-block" target="_blank">
-								Print
+							<a href="<?= base_url() ?>order/printout/<?= encrypt_url($data->id) ?>" class="btn btn-xs btn-default mr-2 px-2" target="_blank">
+								<i class="fa fa-print"></i>
 							</a>
+							<button class="btn btn-xs btn-danger" title="Batalkan transaksi" onclick="cancelTransaction('<?= $data->id ?>')">
+								<i class="fa fa-retweet"></i>
+							</button>
 						</div>
                     </div>
                 </div>

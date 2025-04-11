@@ -544,4 +544,43 @@ class OrderModel extends CI_Model
 			'data' => $data
 		];
 	}
+
+	public function cancel($id)
+	{
+		$user = $this->session->userdata('user_id');
+		$check = $this->db->get_where('orders', [
+			'user_id' => $user, 'status' => 'ACTIVE', 'type' => 0
+		])->num_rows();
+
+		if ($check > 0) {
+			return [
+				'status' => 400,
+				'message' => 'Masih ada faktur lain belum selesai'
+			];
+		}
+
+		$order = $this->db->where('id', $id)->get('orders')->num_rows();
+		if ($order <= 0) {
+			return [
+				'status' => 400,
+				'message' => 'Data faktur tidak valid'
+			];
+		}
+
+		$this->db->where('id', $id)->update('orders', [
+			'status' => 'ACTIVE', 'type' => 0
+		]);
+		if ($this->db->affected_rows() <= 0) {
+			return [
+				'status' => 400,
+				'message' => 'Terjadi kesalahan saat menyimpan data'
+			];
+		}
+
+		return [
+			'status' => 200,
+			'message' => 'Transaksi berhasil dibatalkan',
+			'url' => base_url().'order/add'
+		];
+	}
 }

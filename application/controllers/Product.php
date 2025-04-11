@@ -100,7 +100,7 @@ class Product extends CI_Controller
 			$size = convertSizePrint($d->size, $d->category_id);
 
 			$this->db->where('id', $d->id)->update('products', [
-				'keyword' => "$size $d->name"
+				'keyword' => $size ? $size.' '.$d->name : $d->name
 			]);
 		}
 		redirect('product');

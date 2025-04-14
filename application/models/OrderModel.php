@@ -124,7 +124,7 @@ class OrderModel extends CI_Model
 		if ($keyword != '') {
 			$this->db->like('a.keyword', $keyword, 'after');
 		}
-		$data = $this->db->order_by('a.size ASC, a.name ASC')->limit(10)->get()->result_object();
+		$data = $this->db->order_by('a.size ASC, e.name ASC')->limit(10)->get()->result_object();
 
         if ($data) {
             foreach ($data as $d) {

@@ -8,14 +8,14 @@
     <link rel="shortcut icon" href="<?= base_url() ?>/assets/images/favicon.png">
     <style>
         * {
-            font-family: Verdana, Geneva, Tahoma, sans-serif;
-			/*font-family: 'Courier New', Courier, monospace;*/
+            /*font-family: Verdana, Geneva, Tahoma, sans-serif;*/
+			font-family: 'Courier New', Courier, monospace;
 			/*font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;*/
             font-size: 9pt;
         }
 
         .container {
-            width: 302px;
+            width: 75mm;
             display: relative;
         }
 

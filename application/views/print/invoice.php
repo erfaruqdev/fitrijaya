@@ -29,36 +29,6 @@
             max-width: 100%;
         }
 
-        .col-8 {
-            flex: 0 0 66.666667%;
-            max-width: 66.666667%;
-        }
-
-        .col-7 {
-            flex: 0 0 58.333333%;
-            max-width: 58.333333%;
-        }
-
-        .col-6 {
-            flex: 0 0 50%;
-            max-width: 50%;
-        }
-
-        .col-5 {
-            flex: 0 0 41.666667%;
-            max-width: 41.666667%;
-        }
-
-        .col-4 {
-            flex: 0 0 33.333333%;
-            max-width: 33.333333%;
-        }
-
-        .logo {
-            width: 100%;
-            margin-top: 8px;
-        }
-
         .h1,
         .h2,
         .h3,
@@ -78,10 +48,6 @@
             font-family: inherit;
             font-weight: bold;
             color: inherit;
-        }
-
-        .invoice-title {
-            font-size: 3.5rem;
         }
 
         .text-right {
@@ -104,30 +70,8 @@
             background-color: transparent;
         }
 
-        .tablestripped {
-            width: 100%;
-            margin-bottom: 1rem;
-            color: #212529;
-            background-color: transparent;
-        }
-
-        .tablebottom {
-            width: 100%;
-            margin-bottom: 1rem;
-            color: #212529;
-            background-color: transparent;
-        }
-
         .mb-0 {
             margin-bottom: 0px;
-        }
-
-        .mt-2 {
-            margin-top: 3rem;
-        }
-
-        .mb-2 {
-            margin-bottom: 2rem;
         }
 
         .tablestripped th {
@@ -147,10 +91,6 @@
             border-top: 1px dashed #999797;
         }
 
-        #line-bottom {
-            border-top: 1px solid #999797;
-        }
-
         .table-xl th {
             padding: 0.5rem;
         }
@@ -167,21 +107,12 @@
         .text-center {
             text-align: center;
         }
-
-        .text-bold {
-            font-weight: bold;
-        }
-
-        .notes {
-            padding-left: 25px;
-            padding-top: 10px;
-        }
-
-        .pl-2 {
-            padding-left: 1rem;
-        }
 		.mb-1 {
 			margin-bottom: 4px;
+		}
+
+		@page {
+			margin: 0;
 		}
     </style>
 </head>

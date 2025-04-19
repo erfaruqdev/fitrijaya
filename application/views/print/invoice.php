@@ -15,7 +15,7 @@
         }
 
         .container {
-            width: 70mm;
+            width: 80mm;
             display: relative;
         }
 
@@ -200,84 +200,70 @@
 					</div>
 				</div>
 				<hr>
-				<div class="row">
-					<div class="col-12">
-						<table class="table mb-0">
-							<?php if ($data['customer'] !== 'UMUM') { ?>
-							<tr>
-								<td>Pelanggan</td>
-								<td><b><?= $data['customer'] ?></b</td>
-							</tr>
-							<?php } ?>
-							<tr>
-								<td>No. Faktur</td>
-								<td><?= $data['id'] ?></td>
-							</tr>
-							<tr>
-								<td>Tanggal</td>
-								<td>
-									<?= $data['date'] ?>
-								</td>
-							</tr>
-						</table>
-					</div>
+				<table class="table mb-0">
+					<?php if ($data['customer'] !== 'UMUM') { ?>
+						<tr>
+							<td>Pelanggan</td>
+							<td><b><?= $data['customer'] ?></b</td>
+						</tr>
+					<?php } ?>
+					<tr>
+						<td>No. Faktur</td>
+						<td><?= $data['id'] ?></td>
+					</tr>
+					<tr>
+						<td>Tanggal</td>
+						<td>
+							<?= $data['date'] ?>
+						</td>
+					</tr>
+				</table>
+				<hr>
+				<table class="table mb-0">
+					<tbody>
+					<?php
+					$no = 1;
+					foreach ($data['data'] as $d) {
+						?>
+						<tr>
+							<td><?= $d['product'] ?></td>
+							<td class="text-center"><?= $d['qty'] ?></td>
+							<td class="text-right"><?= number_format($d['price'], 0, ',', '.') ?></td>
+							<td class="text-right"><?= number_format($d['amount'], 0, ',', '.') ?></td>
+						</tr>
+						<?php
+					}
+					?>
+					</tbody>
+				</table>
+				<hr>
+				<div class="text-center">
+					Total <b><?= $data['item'] ?></b> item dari <b><?= $data['count'] ?></b> macam barang
 				</div>
 				<hr>
-				<div class="row">
-					<div class="col-12">
-						<table class="table mb-0">
-							<tbody>
-								<?php
-								$no = 1;
-								foreach ($data['data'] as $d) {
-								?>
-									<tr>
-										<td><?= $d['product'] ?></td>
-										<td class="text-center"><?= $d['qty'] ?></td>
-										<td class="text-right"><?= number_format($d['price'], 0, ',', '.') ?></td>
-										<td class="text-right"><?= number_format($d['amount'], 0, ',', '.') ?></td>
-									</tr>
-								<?php
-								}
-								?>
-							</tbody>
-						</table>
-					</div>
-				</div>
-				<hr>
-					<div class="row">
-						<div class="col-12 text-center">
-							Total <b><?= $data['item'] ?></b> item dari <b><?= $data['count'] ?></b> macam barang
-						</div>
-					</div>
-				<hr>
-				<div class="row">
-					<div class="col-12">
-						<table class="table mb-0">
-							<tr>
-								<td style="width: 60%">Total</td>
-								<td style="width: 5%">Rp.</td>
-								<td class="text-right" style="width: 35%">
-									<?= number_format($data['amount'], 0, ',', '.') ?>
-								</td>
-							</tr>
-							<tr>
-								<td>Diskon</td>
-								<td>Rp.</td>
-								<td class="text-right">
-									<?= number_format($data['discount'], 0, ',', '.') ?>
-								</td>
-							</tr>
-							<tr>
-								<td>Jumlah</td>
-								<td>Rp.</td>
-								<td class="text-right">
-									<?= number_format($data['nominal'], 0, ',', '.') ?>
-								</td>
-							</tr>
-						</table>
-					</div>
-				</div>
+				<table class="table mb-0">
+					<tr>
+						<td style="width: 60%">Total</td>
+						<td style="width: 5%">Rp.</td>
+						<td class="text-right" style="width: 35%">
+							<?= number_format($data['amount'], 0, ',', '.') ?>
+						</td>
+					</tr>
+					<tr>
+						<td>Diskon</td>
+						<td>Rp.</td>
+						<td class="text-right">
+							<?= number_format($data['discount'], 0, ',', '.') ?>
+						</td>
+					</tr>
+					<tr>
+						<td>Jumlah</td>
+						<td>Rp.</td>
+						<td class="text-right">
+							<?= number_format($data['nominal'], 0, ',', '.') ?>
+						</td>
+					</tr>
+				</table>
 				<hr>
 				<div class="row">
 					<div class="col-12">

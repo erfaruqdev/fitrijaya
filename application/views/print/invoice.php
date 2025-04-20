@@ -213,12 +213,12 @@
 			<?php } ?>
 		</div>
     </div>
-    <script>
-        window.print()
-        // setTimeout(() => {
-        //     window.close()
-        // }, 2000);
-    </script>
+	<script>
+		window.print()
+		window.onafterprint = function () {
+			window.close()
+		}
+	</script>
 </body>
 
 </html>

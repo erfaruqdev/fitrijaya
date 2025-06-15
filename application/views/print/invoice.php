@@ -215,9 +215,9 @@
     </div>
 	<script>
 		window.print()
-		window.onafterprint = function () {
-			window.close()
-		}
+		// window.onafterprint = function () {
+		// 	window.close()
+		// }
 	</script>
 </body>
 

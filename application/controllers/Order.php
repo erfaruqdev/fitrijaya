@@ -111,12 +111,12 @@ class Order extends CI_Controller
         echo json_encode($result);
     }
 
-    public function printOut($invoice)
+    public function printOut($invoice, $type = 1)
     {
         $invoice = decrypt_url($invoice);
         $data = [
             'title' => 'Print',
-            'data' => $this->om->printOut($invoice)
+            'data' => $this->om->printOut($invoice, $type)
         ];
         $this->load->view('print/invoice', $data);
     }

@@ -491,7 +491,7 @@ class OrderModel extends CI_Model
         return $this->db->where('order_id', $id)->get()->row_object();
     }
 
-	public function printOut($id)
+	public function printOut($id, $type)
 	{
 		//GET TABLE ORDERS AND CUSTOMERS
 		$this->db->select('a.*, b.name')->from('orders AS a')->join('customers AS b', 'a.customer_id = b.id');
@@ -516,16 +516,17 @@ class OrderModel extends CI_Model
 			];
 		}
 
+		$price = [1 => 0, 2 => 4000];
 		$total = 0;
 		$item = 0;
 		foreach ($datas as $d) {
 			$data[] = [
 				'product' => $d->brand.' '.convertSizePrint($d->size, $d->category_id),
 				'qty' => $d->qty,
-				'price' => $d->price,
-				'amount' => $d->amount
+				'price' => $d->price + $price[$type],
+				'amount' => $d->amount + ($d->qty * $price[$type])
 			];
-			$total += $d->amount;
+			$total += $d->amount + ($d->qty * $price[$type]);
 			$item += $d->qty;
 		}
 

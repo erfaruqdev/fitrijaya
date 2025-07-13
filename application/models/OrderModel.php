@@ -539,7 +539,7 @@ class OrderModel extends CI_Model
 			'date' => dateTimeShortenFormat($getOrder->updated_at),
 			'amount' => $total,
 			'discount' => $getOrder->discount,
-			'nominal' => $getOrder->nominal,
+			'nominal' => $total,
 			'count' => $count,
 			'item' => $item,
 			'data' => $data

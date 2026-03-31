@@ -178,4 +178,11 @@ class Product extends CI_Controller
 
 		redirect('product');
 	}
+
+	public function updatePrice()
+	{
+		$result = $this->pm->updatePrice();
+
+		echo json_encode($result);
+	}
 }

@@ -193,6 +193,52 @@ class ProductModel extends CI_Model
         }
     }
 
+	public function updatePrice()
+	{
+		$brand = $this->input->post('brand', true);
+		$priceInput = $this->input->post('price', true);
+		$price = (int) str_replace('.', '', $priceInput);
+
+		if ($brand == '' || $priceInput == '') {
+			return [
+				'status' => 400,
+				'message' => 'Pastikan semua bidang inputan sudah diisi'
+			];
+		}
+
+		$getBrand = $this->db->get_where('brands', ['id' => $brand])->row_object();
+		if (!$getBrand) {
+			return [
+				'status' => 400,
+				'message' => 'Merk yang dipilih tidak valid'
+			];
+		}
+
+		$products = $this->db->get_where('products', ['brand_id' => $brand]);
+		if ($products->num_rows() < 1) {
+			return [
+				'status' => 400,
+				'message' => 'Produk tidak ditemukan'
+			];
+		}
+
+		$this->db->set('price_three', 'price_three + ' . (int)$price, false);
+		$this->db->where('brand_id', $brand);
+		$this->db->update('products');
+
+		if ($this->db->affected_rows() > 0) {
+			return [
+				'status' => 200,
+				'message' => 'Harga produk berhasil diperbarui'
+			];
+		}
+
+		return [
+			'status' => 200,
+			'message' => 'Tidak ada data yang berubah'
+		];
+	}
+
     public function loadData()
     {
         $name = $this->input->post('name', true);

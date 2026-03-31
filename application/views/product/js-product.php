@@ -196,6 +196,34 @@
         })
     }
 
+	$('#submit-update-price').on('click', function (){
+		updatePrice()
+	})
+
+	const updatePrice = () => {
+		$.ajax({
+			url: `${url}product/updatePrice`,
+			method: 'POST',
+			data: $('#form-update-price').serialize(),
+			dataType: 'JSON',
+			beforeSend: function() {
+				$('.wrap-loading__').show()
+				$('#submit-update-price').prop('disabled', true).text('Data sedang dikirm')
+			},
+			success: function(res) {
+				$('.wrap-loading__').hide()
+				$('#submit-update-price').prop('disabled', false).text('Simpan')
+				if (res.status == 400) {
+					errorAlert(res.message)
+					return false
+				}
+				$('#modal-update-price').modal('hide')
+				toastr.success(`Yeaah..! ${res.message}`)
+				loadData()
+			}
+		})
+	}
+
     const editProduct = (id, type) => {
         $('.wrap-loading__').show()
         $.post(`${url}product/edit`, {

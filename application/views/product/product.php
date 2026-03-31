@@ -27,6 +27,12 @@
                     Tambah Barang
                 </button>
             </div>
+			<div class="col-6 col-sm-12 col-md-6 col-lg-2 col-xl-2 mb-2">
+				<button type="button" class="btn mr-2 btn-sm btn-success btn-block" data-toggle="modal" data-target="#modal-update-price">
+					<i class="fa fa-plus-circle"></i>
+					Update Harga
+				</button>
+			</div>
         </div>
         <div class="row skeleton_loading__">
             <div class="col-lg-4">
@@ -213,6 +219,57 @@
         <!-- /.modal-content -->
     </div>
     <!-- /.modal-dialog -->
+</div>
+
+<div class="modal fade" id="modal-update-price" data-backdrop="static" data-keyboard="false">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			<div class="modal-header py-2 justify-content-end">
+				<h6 class="modal-title">Update Harga</h6>
+			</div>
+			<form id="form-update-price" autocomplete="off" action="#">
+				<div class="modal-body">
+					<div class="form-group row">
+						<label for="category" class="col-sm-4 col-form-label">Kategori</label>
+						<div class="col-sm-8">
+							<div class="row">
+								<div class="col-7 mb-sm-0 form-feedback">
+									<select name="brand" id="brand-update-price" class="form-control">
+										<option value="">.:Pilih Merk:.</option>
+										<?php
+										if ($brands) {
+											foreach ($brands as $brand) {
+												?>
+												<option value="<?= $brand->id ?>"><?= $brand->name ?></option>
+												<?php
+											}
+										}
+										?>
+									</select>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="form-group row mb-0">
+						<label for="unit" class="col-sm-4 col-form-label">Harga per item</label>
+						<div class="col-sm-8">
+							<div class="row">
+								<div class="col-4 mb-sm-0 form-feedback">
+									<input type="text" class="form-control price" onfocusin="selectValue(this)" name="price" id="price-update-price" value="0">
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer justify-content-between p-2">
+					<button type="button" class="btn btn-danger btn-sm px-5" data-dismiss="modal">Batal</button>
+					<button type="button" id="submit-update-price" class="btn btn-primary btn-sm px-5">Simpan</button>
+				</div>
+			</form>
+		</div>
+		<!-- /.modal-content -->
+	</div>
+	<!-- /.modal-dialog -->
 </div>
 <?php $this->load->view('partials/footer'); ?>
 <script src="<?= base_url() ?>template/plugins/jquery-validation/jquery.validate.min.js"></script>

@@ -1,11 +1,6 @@
 ---
 deployment:
-tasks:
-- export DEPLOYPATH=/home/kebunbar/shopee.kebunbaru.id/
-- /bin/cp -R application $DEPLOYPATH
-- /bin/cp -R system $DEPLOYPATH
-- /bin/cp -R assets $DEPLOYPATH
-- /bin/cp -R vendor $DEPLOYPATH
-- /bin/cp -R template $DEPLOYPATH
-- /bin/cp index.php $DEPLOYPATH
-- /bin/cp .htaccess $DEPLOYPATH
+    tasks:
+        - export DEPLOYPATH=/home/kebunbar/shopee.kebunbaru.id/
+        - /bin/touch $DEPLOYPATH/deploy-test.txt
+        - /bin/cp index.php $DEPLOYPATH

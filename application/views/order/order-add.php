@@ -69,11 +69,16 @@
                 <div class="col-md-12 col-lg-5 col-xl-5 mb-3">
                     <form id="form-order" autocomplete="off">
 						<div class="row mb-3">
-							<div class="col-9">
+							<div class="col-12">
 								<input type="text" autofocus name="name" id="product-name" class="form-control form-control-sm" placeholder="Ketik nama barang">
 							</div>
-							<div class="col-3">
-								<input value="0" type="number" name="qty" id="qty" class="form-control form-control-sm" placeholder="QTY">
+						</div>
+						<div class="row mb-3">
+							<div class="col-6">
+								<input type="text" name="size" id="size" class="form-control form-control-sm" placeholder="Ukuran">
+							</div>
+							<div class="col-6">
+								<input type="number" name="qty" id="qty" class="form-control form-control-sm" placeholder="QTY">
 							</div>
 						</div>
 						<div class="row">
@@ -94,8 +99,8 @@
 							</div>
 						</div>
 						<input type="hidden" name="order_id" id="order-id" value="<?= $setting['invoice'] ?>">
+						<input type="hidden" name="brand_id" id="brand-id" value="0">
 						<input type="hidden" name="product_id" id="product-id" value="0">
-						<input type="hidden" id="price" name="price" value="0">
                     </form>
                     <button type="button" class="btn btn-primary btn-xs btn-block mt-3" id="save-order">
                         <i class="fa fa-save"></i> Simpan

@@ -3,27 +3,43 @@ deployment:
     tasks:
         - export DEPLOYPATH=/home/kebunbar/shopee.kebunbaru.id
 
-        # ensure folder exists
+        # ensure base folders
         - /bin/mkdir -p $DEPLOYPATH
+        - /bin/mkdir -p $DEPLOYPATH/application
 
-        # clean old files (optional tapi bagus)
-        - /bin/rm -rf $DEPLOYPATH/application
+        # refresh safe folders (full replace)
         - /bin/rm -rf $DEPLOYPATH/system
         - /bin/rm -rf $DEPLOYPATH/assets
-        - /bin/rm -rf $DEPLOYPATH/vendor
         - /bin/rm -rf $DEPLOYPATH/template
 
-        # copy fresh files
-        - /bin/cp -R application $DEPLOYPATH/
         - /bin/cp -R system $DEPLOYPATH/
         - /bin/cp -R assets $DEPLOYPATH/
-        - /bin/cp -R vendor $DEPLOYPATH/
         - /bin/cp -R template $DEPLOYPATH/
 
+        # ensure application subfolders
+        - /bin/mkdir -p $DEPLOYPATH/application/controllers
+        - /bin/mkdir -p $DEPLOYPATH/application/models
+        - /bin/mkdir -p $DEPLOYPATH/application/views
+        - /bin/mkdir -p $DEPLOYPATH/application/core
+        - /bin/mkdir -p $DEPLOYPATH/application/helpers
+        - /bin/mkdir -p $DEPLOYPATH/application/hooks
+        - /bin/mkdir -p $DEPLOYPATH/application/libraries
+        - /bin/mkdir -p $DEPLOYPATH/application/language
+        - /bin/mkdir -p $DEPLOYPATH/application/third_party
+
+        # copy ONLY safe code (tidak sentuh config, cache, logs)
+        - /bin/cp -R application/controllers/* $DEPLOYPATH/application/controllers/
+        - /bin/cp -R application/models/* $DEPLOYPATH/application/models/
+        - /bin/cp -R application/views/* $DEPLOYPATH/application/views/
+        - /bin/cp -R application/core/* $DEPLOYPATH/application/core/
+        - /bin/cp -R application/helpers/* $DEPLOYPATH/application/helpers/
+        - /bin/cp -R application/hooks/* $DEPLOYPATH/application/hooks/
+        - /bin/cp -R application/libraries/* $DEPLOYPATH/application/libraries/
+        - /bin/cp -R application/language/* $DEPLOYPATH/application/language/
+        - /bin/cp -R application/third_party/* $DEPLOYPATH/application/third_party/
+
+        # root files
         - /bin/cp index.php $DEPLOYPATH/
         - /bin/cp .htaccess $DEPLOYPATH/
 
-        # set permission (optional)
-        - /bin/chmod -R 755 $DEPLOYPATH
-
-        - echo "DEPLOY SUCCESS"
+        - echo "CI3 deploy SUCCESS"

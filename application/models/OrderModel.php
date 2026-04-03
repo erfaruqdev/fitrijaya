@@ -115,50 +115,109 @@ class OrderModel extends CI_Model
         }
     }
 
-    public function getProduct()
-    {
-        $keyword = $this->input->post('keyword', true);
+	public function getProduct()
+	{
+		$keyword = $this->input->post('keyword', true);
+		$response = [];
 
-		$this->db->select('a.*, e.name AS brand')->from('products AS a');
-		$this->db->join('brands AS e', 'a.brand_id = e.id');
+		$this->db->select('id, name')
+			->from('brands');
+
 		if ($keyword != '') {
-			$this->db->like('a.keyword', $keyword, 'after');
+			$this->db->like('name', $keyword, 'after');
 		}
-		$data = $this->db->order_by('a.size ASC, e.name ASC')->limit(10)->get()->result_object();
 
-        if ($data) {
-            foreach ($data as $d) {
-                $response[] = [
-					'label' => $d->brand.' '.convertSize($d->size, $d->category_id),
-					'value' => $d->brand.' '.convertSize($d->size, $d->category_id),
-                    'id' => $d->id
-                ];
-            }
-        }
+		$data = $this->db
+			->order_by('name', 'ASC')
+			->limit(10)
+			->get()
+			->result_object();
 
-        return $response;
-    }
+		if ($data) {
+			foreach ($data as $d) {
+				$response[] = [
+					'label' => $d->name,
+					'value' => $d->name,
+					'id'    => $d->id
+				];
+			}
+		}
 
-    public function getDetailProduct()
-    {
-        $id = $this->input->post('id', true);
+		return $response;
+	}
 
-		$product = $this->db->get_where('products', ['id' => $id])->row_object();
+	public function getDetailProduct()
+	{
+		$brandId = $this->input->post('id', true);
+		$sizeInput = $this->input->post('size', true);
+
+		$size = $this->mapSizeToNumber($sizeInput);
+
+		if ($size === null) {
+			return [
+				'status' => 400,
+				'message' => 'Size tidak valid'
+			];
+		}
+
+		$product = $this->db
+			->where('brand_id', $brandId)
+			->where('size', $size)
+			->get('products')
+			->row_object();
+
 		if (!$product) {
 			return [
 				'status' => 400,
-				'message' => 'ID produk tidak valid'
+//				'message' => 'Produk tidak ditemukan'
+				'message' => $size
 			];
 		}
 
 		return [
 			'status' => 200,
 			'message' => 'Sukses',
+			'id' => $product->id,
 			'stock' => $this->getProductStock($product->id),
 			'price' => $product->price_three,
 			'price_display' => number_format($product->price_three, 0, ',', '.')
 		];
-    }
+	}
+
+	private function mapSizeToNumber($size)
+	{
+		$size = strtoupper(trim($size));
+		$size = str_replace(' ', '', $size);
+
+		$map = [
+			'S'       => 10,
+			'M'       => 11,
+			'L'       => 12,
+			'XL'      => 13,
+			'XXL'     => 14,
+			'2XL'     => 14,
+			'XXXL'    => 15,
+			'3XL'     => 15,
+			'XXXXL'   => 16,
+			'4XL'     => 16,
+			'XXXXXL'  => 17,
+			'5XL'     => 17,
+		];
+
+		if (isset($map[$size])) {
+			return $map[$size];
+		}
+
+		if (ctype_digit($size)) {
+			$sizeNumber = (int) $size;
+
+			if ($sizeNumber >= 0 && $sizeNumber <= 50) {
+				return $sizeNumber;
+			}
+		}
+
+		return null;
+	}
 
     public function getProductStock($id)
     {
@@ -231,7 +290,7 @@ class OrderModel extends CI_Model
         $this->db->join('products AS b', 'a.product_id = b.id');
         $this->db->join('brands AS c', 'b.brand_id = c.id');
         $this->db->where('a.order_id', $invoice);
-        $result = $this->db->order_by('a.id', 'DESC')->get();
+        $result = $this->db->order_by('a.updated_at', 'DESC')->get();
 
         $data = $result->result_object();
         $row = $result->num_rows();
@@ -303,86 +362,177 @@ class OrderModel extends CI_Model
         }
     }
 
-    public function save()
-    {
-        $orderId = $this->input->post('order_id', true);
-        $productId = $this->input->post('product_id', true);
-        $qty = $this->input->post('qty', true);
+	public function save()
+	{
+		$orderId   = trim($this->input->post('order_id', true));
+		$productId = trim($this->input->post('product_id', true));
+		$brandId   = trim($this->input->post('brand_id', true));
+		$sizeInput = trim($this->input->post('size', true));
+		$qtyInput  = trim($this->input->post('qty', true));
 
-        //GET PRODUCTS
-        $product = $this->db->get_where('products', ['id' => $productId])->row_object();
-        if (!$product) {
-            return [
-                'status' => 400,
-                'message' => 'Produk tidak valid'
-            ];
-        }
+		$this->output->set_content_type('application/json');
 
-		$price = $product->price_three;
-
-        if ($qty <= 0) {
-            return [
-                'status' => 400,
-                'message' => 'QTY tidak boleh NOL/Kosong'
-            ];
-        }
-
-//		$getQty = $this->getProductStock($productId);
-//		if ($qty > $getQty) {
-//			return [
-//				'status' => 400,
-//				'message' => 'Stok tidak cukup'
-//			];
-//		}
-
-        //CHECK LAST PRODUCT IN SAME TRANSACTION
-        $checkProductSameTransaction = $this->db->get_where('order_detail', [
-            'order_id' => $orderId, 'product_id' => $productId
-        ])->row_object();
-
-		if ($checkProductSameTransaction) {
-			//UPDATE DATA
-			$this->db->where('id', $checkProductSameTransaction->id)->update('order_detail', [
-				'qty' => $checkProductSameTransaction->qty + $qty,
-				'amount' => ($price * $qty) + $checkProductSameTransaction->amount
-			]);
-
-			//GET STOCK TEMP FOR SAME PRODUCK IN THIS TRANSACTION
-			$getStockTemp = $this->db->get_where('stock_temp', [
-				'order_id' => $orderId, 'product_id' => $productId
-			])->row_object();
-			if ($getStockTemp){
-				$idStockTemp = $getStockTemp->id;
-				$this->db->where('id', $idStockTemp)->update('stock_temp', ['qty' => $qty + $getStockTemp->qty]);
-			}
-		}else {
-			$this->db->insert('order_detail', [
-				'order_id' => $orderId,
-				'product_id' => $productId,
-				'qty' => $qty,
-				'price' => $price,
-				'amount' => $price * $qty,
-				'created_at' => date('Y-m-d H:i:s')
-			]);
-
-			$this->db->insert('stock_temp', [
-				'order_id' => $orderId,
-				'product_id' => $productId,
-				'qty' => $qty
-			]);
+		// Validasi field wajib
+		if ($orderId === '') {
+			return [
+				'status' => 400,
+				'message' => 'Order ID tidak valid'
+			];
 		}
-        if ($this->db->affected_rows() <= 0) {
-            return [
-                'status' => 400,
-                'message' => 'Server tidak merespon'
-            ];
-        }
 
-        return [
-            'status' => 200,
-            'message' => 'Sukses'
-        ];
-    }
+		if ($productId === '') {
+			return [
+				'status' => 400,
+				'message' => 'Product ID tidak valid'
+			];
+		}
+
+		if ($brandId === '') {
+			return [
+				'status' => 400,
+				'message' => 'Brand ID tidak valid'
+			];
+		}
+
+		if ($sizeInput === '') {
+			return [
+				'status' => 400,
+				'message' => 'Ukuran tidak valid'
+			];
+		}
+
+		if ($qtyInput === '') {
+			return [
+				'status' => 400,
+				'message' => 'QTY masih kosong'
+			];
+		}
+
+		if (!ctype_digit((string) $qtyInput)) {
+			return [
+				'status' => 400,
+				'message' => 'QTY harus berupa angka bulat'
+			];
+		}
+
+		$qty = (int) $qtyInput;
+
+		if ($qty <= 0) {
+			 return [
+				'status' => 400,
+				'message' => 'QTY tidak boleh NOL/Kosong'
+			];
+		}
+
+		// Validasi size
+		$size = $this->mapSizeToNumber($sizeInput);
+		if ($size === null) {
+			return [
+				'status' => 400,
+				'message' => 'Size tidak valid'
+			];
+		}
+
+		// Ambil produk utama
+		$product = $this->db->get_where('products', ['id' => $productId])->row_object();
+
+		if (!$product) {
+			return [
+				'status' => 400,
+				'message' => 'Produk tidak valid'
+			];
+		}
+
+		// Validasi silang payload vs DB
+		if ((string) $product->brand_id !== (string) $brandId) {
+			 return [
+				'status' => 400,
+				'message' => 'Brand tidak sesuai dengan produk'
+			];
+		}
+
+		if ((string) $product->size !== (string) $size) {
+			return [
+				'status' => 400,
+				'message' => 'Size tidak sesuai dengan produk'
+			];
+		}
+
+		$price = (int) $product->price_three;
+
+		if ($price < 0) {
+			return [
+				'status' => 400,
+				'message' => 'Harga produk tidak valid'
+			];
+		}
+
+		// Transaction start
+		$this->db->trans_begin();
+
+		try {
+			$existing = $this->db->get_where('order_detail', [
+				'order_id'   => $orderId,
+				'product_id' => $product->id
+			])->row_object();
+
+			if ($existing) {
+				$newQty = (int) $existing->qty + $qty;
+				$newAmount = ((int) $existing->amount) + ($price * $qty);
+
+				$this->db->where('id', $existing->id)->update('order_detail', [
+					'qty'        => $newQty,
+					'amount'     => $newAmount,
+					'updated_at' => date('Y-m-d H:i:s')
+				]);
+			} else {
+				$this->db->insert('order_detail', [
+					'order_id'   => $orderId,
+					'product_id' => $product->id,
+					'qty'        => $qty,
+					'price'      => $price,
+					'amount'     => $price * $qty,
+					'created_at' => date('Y-m-d H:i:s'),
+					'updated_at' => date('Y-m-d H:i:s')
+				]);
+			}
+
+			if ($this->db->trans_status() === false) {
+				$this->db->trans_rollback();
+
+				return [
+					'status' => 400,
+					'message' => 'Gagal menyimpan data'
+				];
+			}
+
+			$this->db->trans_commit();
+
+			return [
+				'status' => 200,
+				'message' => 'Sukses',
+				'data' => [
+					'order_id'   => $orderId,
+					'product_id' => $product->id,
+					'name'       => $product->name,
+					'size'       => $product->size,
+					'qty'        => $qty,
+					'price'      => $price,
+					'amount'     => $price * $qty
+				]
+			];
+
+		} catch (Exception $e) {
+			$this->db->trans_rollback();
+
+			log_message('error', 'Save order error: ' . $e->getMessage());
+
+			return[
+				'status' => 500,
+				'message' => 'Terjadi kesalahan pada server'
+			];
+		}
+	}
 
     public function deleteDetail()
     {

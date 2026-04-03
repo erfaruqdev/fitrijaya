@@ -121,41 +121,66 @@
             select: function(event, ui) {
                 // Set selection
                 $('#product-name').val(ui.item.label); // display the selected text
-                $('#product-id').val(ui.item.id); // save selected id to input
-				getDetailProduct(ui.item.id)
+                $('#brand-id').val(ui.item.id); // save selected id to input
+				setTimeout(() => {
+					$('#size').focus();
+				}, 100);
                 return false;
             }
         });
     });
 
-    const getDetailProduct = id => {
-        $.ajax({
-            url: `${url}order/getdetailproduct`,
-            method: 'POST',
-            data: {
-                id
-            },
-            dataType: 'JSON',
-            beforeSend: function() {
-                $('.skeleton_loading_product__').show()
-            },
-            success: function(res) {
-                if (res.status == 400) {
-                    errorAlert(res.message)
-                    return false
-                }
+	$('#size').on('keydown', function(e) {
+		if (e.key === 'Enter') {
+			e.preventDefault();
 
-                $('#show-stock').text(res.stock)
-                $('#show-price').text(res.price_display)
-				$('#price').val(res.price)
-                $('#product-info').show()
-            },
-            complete: function() {
-                $('.skeleton_loading_product__').hide()
-                $('#qty').focus().select()
-            }
-        })
-    }
+			const size = $(this).val().trim();
+			const brandId = $('#brand-id').val();
+
+			if (!size) {
+				alert('Size harus diisi');
+				return;
+			}
+
+			if (!brandId) {
+				alert('Pilih produk dulu');
+				return;
+			}
+
+			// 🔥 kirim id + size
+			getDetailProduct(brandId, size);
+		}
+	});
+
+	const getDetailProduct = (id, size) => {
+		$.ajax({
+			url: `${url}order/getdetailproduct`,
+			method: 'POST',
+			data: {
+				id,
+				size // 🔥 kirim size ke backend
+			},
+			dataType: 'JSON',
+			beforeSend: function() {
+				$('.skeleton_loading_product__').show()
+			},
+			success: function(res) {
+				if (res.status == 400) {
+					errorAlert(res.message)
+					return false
+				}
+
+				$('#show-stock').text(res.stock)
+				$('#show-price').text(res.price_display)
+				$('#product-id').val(res.id)
+				$('#product-info').show()
+			},
+			complete: function() {
+				$('.skeleton_loading_product__').hide()
+				$('#qty').focus().select()
+			}
+		})
+	}
 
     $('#nominal').autoNumeric('init', {
         aSep: '.',
@@ -165,48 +190,74 @@
         vMin: '-999999999'
     });
 
-    $('#qty').on('keyup', function(e) {
-        let key = e.which
-        if (key != 13) {
-            return false
-        }
+	$('#qty').on('keyup', function(e) {
+		let key = e.which;
+		if (key != 13) {
+			return false;
+		}
 
-        if (key == 13 && $(this).val() == '') {
-            return false
-        }
+		if ($(this).val() == '') {
+			return false;
+		}
 
-        save()
-    })
+		save();
+	});
 
-    $('#save-order').on('click', function() {
-        save()
-    })
+	$('#save-order').on('click', function() {
+		save();
+	});
 
-    const save = () => {
+	const save = () => {
 		$.ajax({
 			url: `${url}order/save`,
 			method: 'POST',
 			data: $('#form-order').serialize(),
 			dataType: 'JSON',
 			beforeSend: function() {
-				$('#save-order').prop('disabled', true).text('Permintaan sedang dikirim')
-				$('.wrap-loading__').show()
+				$('#save-order').prop('disabled', true).html('Permintaan sedang dikirim');
+				$('.wrap-loading__').show();
 			},
 			success: function(res) {
-				$('#save-order').prop('disabled', false).html('<i class="fa fa-save"></i> Simpan')
-				$('.wrap-loading__').hide()
-				if (res.status == 400) {
-					errorAlert(res.message)
-					return false
+				if (res.status != 200) {
+					errorAlert(res.message);
+					return false;
 				}
-				toastr.success('Yeaahh..! Satu barang berhasil ditambahkan')
-				$('#qty').val('')
-				$('#product-id').val(0)
-				$('#product-name').focus().val('')
-				loadData()
+
+				toastr.success('Yeaahh..! Satu barang berhasil ditambahkan');
+
+				// pertahankan brand & name
+				const productName = $('#product-name').val();
+				const brandId = $('#brand-id').val();
+
+				// reset field input transaksi saja
+				$('#qty').val('');
+				$('#size').val('');
+				$('#price').val('');
+				$('#show-stock').text('');
+				$('#show-price').text('');
+				$('#product-info').hide();
+
+				// product_id dikosongkan agar user pilih ulang size/variant
+				$('#product-id').val(0);
+
+				// restore field yang harus tetap
+				// $('#product-name').val(productName);
+				// $('#brand-id').val(brandId);
+
+				// lanjut fokus ke size
+				$('#size').focus();
+
+				loadData();
+			},
+			error: function() {
+				errorAlert('Terjadi kesalahan saat menyimpan data');
+			},
+			complete: function() {
+				$('#save-order').prop('disabled', false).html('<i class="fa fa-save"></i> Simpan');
+				$('.wrap-loading__').hide();
 			}
-		})
-    }
+		});
+	};
 
     const loadData = () => {
         let invoice = $('#invoice').val()

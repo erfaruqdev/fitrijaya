@@ -547,13 +547,13 @@ class OrderModel extends CI_Model
         $order = $check->order_id;
         $product = $check->product_id;
 
-        $this->db->where(['order_id' => $order, 'product_id' => $product])->delete('stock_temp');
-        if ($this->db->affected_rows() <= 0) {
-            return [
-                'status' => 400,
-                'message' => 'Internal server error'
-            ];
-        }
+//        $this->db->where(['order_id' => $order, 'product_id' => $product])->delete('stock_temp');
+//        if ($this->db->affected_rows() <= 0) {
+//            return [
+//                'status' => 400,
+//                'message' => 'Internal server error'
+//            ];
+//        }
 
         $this->db->where('id', $id)->delete('order_detail');
         if ($this->db->affected_rows() <= 0) {

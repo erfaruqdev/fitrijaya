@@ -1,6 +1,29 @@
 ---
 deployment:
     tasks:
-        - export DEPLOYPATH=/home/kebunbar/shopee.kebunbaru.id/
-        - /bin/touch $DEPLOYPATH/deploy-test.txt
-        - /bin/cp index.php $DEPLOYPATH
+        - export DEPLOYPATH=/home/kebunbar/shopee.kebunbaru.id
+
+        # ensure folder exists
+        - /bin/mkdir -p $DEPLOYPATH
+
+        # clean old files (optional tapi bagus)
+        - /bin/rm -rf $DEPLOYPATH/application
+        - /bin/rm -rf $DEPLOYPATH/system
+        - /bin/rm -rf $DEPLOYPATH/assets
+        - /bin/rm -rf $DEPLOYPATH/vendor
+        - /bin/rm -rf $DEPLOYPATH/template
+
+        # copy fresh files
+        - /bin/cp -R application $DEPLOYPATH/
+        - /bin/cp -R system $DEPLOYPATH/
+        - /bin/cp -R assets $DEPLOYPATH/
+        - /bin/cp -R vendor $DEPLOYPATH/
+        - /bin/cp -R template $DEPLOYPATH/
+
+        - /bin/cp index.php $DEPLOYPATH/
+        - /bin/cp .htaccess $DEPLOYPATH/
+
+        # set permission (optional)
+        - /bin/chmod -R 755 $DEPLOYPATH
+
+        - echo "DEPLOY SUCCESS"

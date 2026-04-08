@@ -121,6 +121,16 @@ class Order extends CI_Controller
         $this->load->view('print/invoice', $data);
     }
 
+	public function printDiff($invoice, $type = 1)
+	{
+		$invoice = decrypt_url($invoice);
+		$data = [
+			'title' => 'Print',
+			'data' => $this->om->printDiff($invoice, $type)
+		];
+		$this->load->view('print/invoice-diff', $data);
+	}
+
 	public function cancel()
 	{
 		$id = $this->input->post('id', TRUE);

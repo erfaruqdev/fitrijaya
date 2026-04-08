@@ -696,6 +696,72 @@ class OrderModel extends CI_Model
 		];
 	}
 
+	public function printDiff($id, $type)
+	{
+		//GET TABLE ORDERS AND CUSTOMERS
+		$this->db->select('a.*, b.name')->from('orders AS a')->join('customers AS b', 'a.customer_id = b.id');
+		$getOrder = $this->db->where('a.id', $id)->get()->row_object();
+		if (!$getOrder) {
+			return [
+				'status' => 400,
+				'message' => 'Data customer dan pesanan tidak valid'
+			];
+		}
+
+		$this->db->select('a.price, a.price_back, SUM(a.qty) as qty, SUM(a.amount) as amount, b.name AS product, b.color, b.size, b.category_id, c.name as brand')->from('order_detail AS a');
+		$this->db->join('products AS b', 'a.product_id = b.id')->join('brands as c', 'c.id = b.brand_id');
+		$this->db->where('a.order_id', $id);
+		$this->db->where('b.brand_id', 'FJ-S');
+		$result = $this->db->order_by('c.order ASC, b.size ASC')->group_by(['b.brand_id', 'b.size'])->get();
+		$datas = $result->result_object();
+		$count = $result->num_rows();
+		if (!$datas) {
+			return [
+				'status' => 400,
+				'message' => 'Data barang tidak valid'
+			];
+		}
+
+		$price = [1 => 0, 2 => 4000];
+		$total = 0;
+		$total_back = 0;
+		$item = 0;
+		foreach ($datas as $d) {
+			$price_sell = $d->price + $price[$type];
+			$amount_sell = $d->amount + ($d->qty * $price[$type]);
+			$amount_back = $d->price_back * $d->qty;
+
+			$data[] = [
+				'product'    => $d->brand . ' ' . convertSizePrint($d->size, $d->category_id),
+				'qty'        => $d->qty,
+				'price_back' => $d->price_back,
+				'price'      => $price_sell,
+				'amount_back'=> $amount_back,
+				'amount'     => $amount_sell
+			];
+			$total      += $amount_sell;
+			$total_back += $amount_back;
+			$item       += $d->qty;
+		}
+
+		return [
+			'status'      => 200,
+			'message'     => 'Sukses',
+			'id'          => $id,
+			'customer'    => $getOrder->name,
+			'sales'       => $this->session->userdata('name'),
+			'date'        => dateTimeShortenFormat($getOrder->updated_at),
+			'amount'      => $total,
+			'amount_back' => $total_back,
+			'diff'        => $total - $total_back,
+			'discount'    => $getOrder->discount,
+			'nominal'     => $total,
+			'count'       => $count,
+			'item'        => $item,
+			'data'        => $data
+		];
+	}
+
 	public function cancel($id)
 	{
 		$user = $this->session->userdata('user_id');

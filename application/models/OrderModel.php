@@ -698,50 +698,106 @@ class OrderModel extends CI_Model
 
 	public function printDiff($id, $type)
 	{
-		//GET TABLE ORDERS AND CUSTOMERS
-		$this->db->select('a.*, b.name')->from('orders AS a')->join('customers AS b', 'a.customer_id = b.id');
-		$getOrder = $this->db->where('a.id', $id)->get()->row_object();
+		// Tambahan harga berdasarkan tipe
+		$priceAdjustment = [
+			1 => 0,
+			2 => 4000
+		];
+
+		if (!isset($priceAdjustment[$type])) {
+			return [
+				'status'  => 400,
+				'message' => 'Tipe harga tidak valid'
+			];
+		}
+
+		// GET ORDER + CUSTOMER
+		$this->db->select('a.*, b.name');
+		$this->db->from('orders AS a');
+		$this->db->join('customers AS b', 'a.customer_id = b.id');
+		$this->db->where('a.id', $id);
+		$getOrder = $this->db->get()->row_object();
+
 		if (!$getOrder) {
 			return [
-				'status' => 400,
+				'status'  => 400,
 				'message' => 'Data customer dan pesanan tidak valid'
 			];
 		}
 
-		$this->db->select('a.price, a.price_back, SUM(a.qty) as qty, SUM(a.amount) as amount, b.name AS product, b.color, b.size, b.category_id, c.name as brand')->from('order_detail AS a');
-		$this->db->join('products AS b', 'a.product_id = b.id')->join('brands as c', 'c.id = b.brand_id');
+		/**
+		 * Keterangan field:
+		 * - price_back = harga awal
+		 * - price      = harga sebenarnya / harga jual
+		 *
+		 * Karena data digroup per brand + size, maka semua field non-group
+		 * harus di-aggregate agar hasilnya konsisten.
+		 */
+		$this->db->select("
+        SUM(a.qty) AS qty,
+        SUM(a.price_back * a.qty) AS amount_back,
+        SUM(a.price * a.qty) AS amount,
+        MAX(a.price_back) AS price_back,
+        MAX(a.price) AS price,
+        b.size,
+        b.category_id,
+        c.name AS brand
+    ", false);
+
+		$this->db->from('order_detail AS a');
+		$this->db->join('products AS b', 'a.product_id = b.id');
+		$this->db->join('brands AS c', 'c.id = b.brand_id');
 		$this->db->where('a.order_id', $id);
 		$this->db->where('b.brand_id', 'FJ-S');
-		$result = $this->db->order_by('c.order ASC, b.size ASC')->group_by(['b.brand_id', 'b.size'])->get();
-		$datas = $result->result_object();
-		$count = $result->num_rows();
+		$this->db->group_by([
+			'b.brand_id',
+			'b.size',
+			'b.category_id',
+			'c.name'
+		]);
+		$this->db->order_by('c.order ASC, b.size ASC');
+
+		$result = $this->db->get();
+		$datas  = $result->result_object();
+		$count  = $result->num_rows();
+
 		if (!$datas) {
 			return [
-				'status' => 400,
+				'status'  => 400,
 				'message' => 'Data barang tidak valid'
 			];
 		}
 
-		$price = [1 => 0, 2 => 4000];
-		$total = 0;
-		$total_back = 0;
-		$item = 0;
+		$data       = [];
+		$total      = 0; // total harga semestinya
+		$totalBack  = 0; // total harga awal
+		$item       = 0;
+		$adjustment = $priceAdjustment[$type];
+
 		foreach ($datas as $d) {
-			$price_sell = $d->price + $price[$type];
-			$amount_sell = $d->amount + ($d->qty * $price[$type]);
-			$amount_back = $d->price_back * $d->qty;
+			$qty = (int) $d->qty;
+
+			// Harga awal
+			$priceBack  = (int) $d->price_back;
+			$amountBack = (int) $d->amount_back;
+
+			// Harga semestinya
+			// Kalau type = 2, tambah 4000 per pcs
+			$priceSell  = (int) $d->price + $adjustment;
+			$amountSell = (int) $d->amount + ($qty * $adjustment);
 
 			$data[] = [
-				'product'    => $d->brand . ' ' . convertSizePrint($d->size, $d->category_id),
-				'qty'        => $d->qty,
-				'price_back' => $d->price_back,
-				'price'      => $price_sell,
-				'amount_back'=> $amount_back,
-				'amount'     => $amount_sell
+				'product'     => $d->brand . ' ' . convertSizePrint($d->size, $d->category_id),
+				'qty'         => $qty,
+				'price_back'  => $priceBack,
+				'price'       => $priceSell,
+				'amount_back' => $amountBack,
+				'amount'      => $amountSell
 			];
-			$total      += $amount_sell;
-			$total_back += $amount_back;
-			$item       += $d->qty;
+
+			$total     += $amountSell;
+			$totalBack += $amountBack;
+			$item      += $qty;
 		}
 
 		return [
@@ -751,9 +807,9 @@ class OrderModel extends CI_Model
 			'customer'    => $getOrder->name,
 			'sales'       => $this->session->userdata('name'),
 			'date'        => dateTimeShortenFormat($getOrder->updated_at),
-			'amount'      => $total,
-			'amount_back' => $total_back,
-			'diff'        => $total - $total_back,
+			'amount'      => $total,       // Harga Semestinya
+			'amount_back' => $totalBack,   // Harga Awal
+			'diff'        => $total - $totalBack,
 			'discount'    => $getOrder->discount,
 			'nominal'     => $total,
 			'count'       => $count,

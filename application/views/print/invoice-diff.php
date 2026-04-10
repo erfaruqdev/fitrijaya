@@ -171,14 +171,14 @@
 				<!-- Kesimpulan -->
 				<table class="table mb-0">
 					<tr>
-						<td style="width: 55%">Jml. Harga Modal</td>
+						<td style="width: 55%">Harga Awal</td>
 						<td style="width: 5%">Rp.</td>
 						<td class="text-right" style="width: 40%">
 							<?= number_format($data['amount_back'], 0, ',', '.') ?>
 						</td>
 					</tr>
 					<tr>
-						<td>Jml. Harga Jual</td>
+						<td>Harga Semestinya</td>
 						<td>Rp.</td>
 						<td class="text-right">
 							<?= number_format($data['amount'], 0, ',', '.') ?>
